@@ -40,24 +40,30 @@ python-dev/
 
 ## Install — Claude Code
 
-Local-directory plugin. Merge these keys into `~/.claude/settings.json` (do not replace the
-file):
+1. Clone the repository:
 
-```jsonc
-{
-  "extraKnownMarketplaces": {
-    "python-dev": {
-      "source": { "source": "directory", "path": "/Users/vsbaldeev/Projects/python-dev" }
-    }
-  },
-  "enabledPlugins": {
-    "python-dev@python-dev": true
-  }
-}
-```
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/python-dev.git
+   ```
 
-After editing, open `/hooks` once or restart so Claude Code reloads config; the five skills
-then appear in the skill listing and auto-trigger by description.
+2. Register it as a local-directory plugin by merging these keys into
+   `~/.claude/settings.json` (do not replace the file). Set `path` to wherever you cloned it:
+
+   ```jsonc
+   {
+     "extraKnownMarketplaces": {
+       "python-dev": {
+         "source": { "source": "directory", "path": "/absolute/path/to/python-dev" }
+       }
+     },
+     "enabledPlugins": {
+       "python-dev@python-dev": true
+     }
+   }
+   ```
+
+3. Open `/hooks` once or restart so Claude Code reloads config; the five skills then appear
+   in the skill listing and auto-trigger by description.
 
 ## Install — Codex
 
