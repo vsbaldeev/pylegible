@@ -32,7 +32,7 @@ skill is the house style for everyday Python; the deep catalog is in `reference.
 | Style | EAFP (try/except) over LBYL (pre-checks). Explicit over implicit. |
 | Comprehensions | Only for simple map/filter. If it needs two conditions or a nested loop, write the loop. |
 | Types | Annotate signatures; prefer built-in generics (`list[str]`). |
-| Comparisons | `is None`, `isinstance(x, T)` — never `== None` or `type(x) == T`. |
+| Comparisons | `is None`, `isinstance(value, SomeType)` — never `== None` or `type(value) == SomeType`. |
 
 ## Example
 
@@ -60,7 +60,7 @@ active_admin_emails = [u.email for g in groups for u in g.users if u.active if u
 ## Boundary
 
 This skill owns general idioms. Class/dataclass/protocol design → **python-oop**. Dunder
-methods, descriptors, custom iterators, deep decorators → **python-data-model**. Tests →
+methods, descriptors, custom iterators, decorator authoring → **python-data-model**. Tests →
 **python-testing**. Logging → **python-logging**. See `reference.md` for the full catalog
 (typing, context managers, generators, packaging, concurrency, anti-patterns) and the
 design principles that live here: fail fast, separation of concerns, KISS/YAGNI/least
