@@ -61,5 +61,6 @@ def test_apply_discount_halves_price_at_fifty_percent():
 ## Boundary
 
 This skill owns test code and pytest. The style of the code *under test* → **python-patterns**;
-class design → **python-oop**; logging assertions aside, logging design → **python-logging**.
-See `reference.md` for fixtures/scopes, mocking, async tests, markers, and configuration.
+class design → **python-oop**; logging assertions aside, logging design → **python-logging**;
+writing the concurrent code you are testing → **python-concurrency**. See `reference.md` for
+fixtures/scopes, mocking, async tests, markers, and configuration.

@@ -101,6 +101,9 @@ async def test_fetch_returns_payload(async_client):
     assert response.status_code == 200
 ```
 
+This covers *testing* async code; for writing it (asyncio, threads, processes, executors)
+see **python-concurrency**.
+
 ## Markers and selection
 
 ```python

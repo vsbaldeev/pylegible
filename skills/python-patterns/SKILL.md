@@ -61,7 +61,8 @@ active_admin_emails = [u.email for g in groups for u in g.users if u.active if u
 
 This skill owns general idioms. Class/dataclass/protocol design → **python-oop**. Dunder
 methods, descriptors, custom iterators, decorator authoring → **python-data-model**. Tests →
-**python-testing**. Logging → **python-logging**. See `reference.md` for the full catalog
-(typing, context managers, generators, packaging, concurrency, anti-patterns) and the
+**python-testing**. Logging → **python-logging**. Threads/asyncio/processes → **python-concurrency**.
+See `reference.md` for the full catalog (typing, context managers, generators, packaging,
+anti-patterns) and the
 design principles that live here: fail fast, separation of concerns, KISS/YAGNI/least
 surprise. The project `CLAUDE.md` lists the full principle set (SOLID and general).

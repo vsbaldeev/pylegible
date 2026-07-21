@@ -338,7 +338,9 @@ class Connection:
 ```
 
 Prefer an `async def` generator (with `yield`) over a hand-written `__anext__` class, just as
-with sync iterators.
+with sync iterators. This skill covers the *protocol* dunders; for choosing and running a
+concurrency model (asyncio event loop, `TaskGroup`, threads vs processes) see
+**python-concurrency**.
 
 ## Context managers
 
