@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for improving **python-dev**. This plugin encodes an opinionated Python house style —
+Thanks for improving **pylegible**. This plugin encodes an opinionated Python house style —
 contributions should match both its conventions and its structure.
 
 ## Repo layout

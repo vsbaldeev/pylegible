@@ -1,4 +1,4 @@
-# AGENTS.md — python-dev
+# AGENTS.md — pylegible
 
 Always-on guidance for coding agents (Codex, and any tool that reads `AGENTS.md`). This
 mirrors `CLAUDE.md`; the two stay in sync deliberately. Guiding value: **write Python that

@@ -1,4 +1,4 @@
-# python-dev conventions
+# pylegible conventions
 
 These rules are always on for this project. The guiding value: **write Python that is
 easy for a human to read, not merely code that is correct.** When clarity and
