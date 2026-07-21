@@ -36,8 +36,10 @@ failures stay at `INFO`/`ERROR` where operators actually look.
 - In an `except` block that handles a failure, use `logger.exception(...)` — it attaches
   the traceback. Use it only where you actually catch.
 - **Never log** passwords, API keys, tokens, full card numbers, or personal data.
-- Libraries never call `basicConfig` or add handlers; only the application entry point
-  configures logging. A library just gets its logger and logs.
+- Libraries never call `basicConfig` or add real handlers; only the application entry
+  point configures logging. A library gets its logger, logs, and attaches a
+  `logging.NullHandler()` to its top-level logger so it stays silent until the app
+  configures logging.
 
 ## stdout vs stderr
 

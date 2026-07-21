@@ -45,6 +45,34 @@ def configure_logging(level: int = logging.INFO) -> None:
     root.addHandler(handler)
 ```
 
+Two gotchas with `basicConfig`:
+
+- Call it **before** any logging call. It configures the root logger only if the root has
+  no handlers yet, so the first `logger.info(...)` that fires before it can lock in the
+  bare "last resort" handler and your config becomes a silent no-op.
+- It configures the **root** logger. The module-level convenience functions
+  (`logging.info(...)`) call it implicitly; prefer explicit `getLogger(__name__)` loggers.
+
+## Library logging: NullHandler and warnings
+
+A library must not configure logging for its host application. It should attach a
+`NullHandler` to its top-level logger so that, if the application never configures
+logging, the library's records are dropped silently instead of triggering the "last
+resort" stderr handler.
+
+```python
+# mylib/__init__.py
+import logging
+logging.getLogger("mylib").addHandler(logging.NullHandler())
+```
+
+Choosing how a library reports a problem:
+
+- The **caller can fix it** (deprecated argument, misuse) → `warnings.warn(...)`, so it
+  surfaces at the call site and can be filtered by the application.
+- **Nothing the caller can do** (a transient downstream hiccup you recovered from) →
+  `logger.warning(...)`.
+
 ## Handlers, formatters, filters
 
 - **Handler** — where records go: `StreamHandler` (stderr/stdout), `FileHandler`,
@@ -55,6 +83,19 @@ def configure_logging(level: int = logging.INFO) -> None:
 Set the level in two places if needed: the logger's level gates what it emits; a
 handler's level gates what that destination accepts.
 
+A record propagates up to every ancestor's handlers. If you attach a handler to a
+non-root logger *and* the root also has one, each record is emitted twice — set
+`logger.propagate = False` on that logger to stop the duplicate.
+
+Rotate files instead of letting them grow without bound:
+
+```python
+from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
+
+by_size = RotatingFileHandler("app.log", maxBytes=10_000_000, backupCount=5)
+by_day = TimedRotatingFileHandler("app.log", when="midnight", backupCount=7)
+```
+
 ## Lazy formatting and why it matters
 
 ```python
@@ -64,6 +105,14 @@ logger.debug("processing %s items for %s", count, user_id)
 The `%s` arguments are only interpolated if `DEBUG` is enabled, so disabled debug logs
 cost almost nothing. An f-string (`logger.debug(f"... {count} ...")`) formats
 unconditionally — wasted work in the common case where debug is off.
+
+Lazy `%`-args only defer the *formatting*. If computing an argument is itself expensive,
+guard the whole call:
+
+```python
+if logger.isEnabledFor(logging.DEBUG):
+    logger.debug("state dump: %s", expensive_snapshot())  # not called unless DEBUG is on
+```
 
 ## Logging exceptions
 
