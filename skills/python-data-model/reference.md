@@ -83,6 +83,27 @@ def __rmul__(self, scalar: float) -> "Vector2D":
     return self * scalar
 ```
 
+On Python 3.14+, using `NotImplemented` in a boolean context raises `TypeError`. That turns a
+subtle bug loud: if you ever branch on a special method's raw result (`if left.__eq__(right):`),
+a returned `NotImplemented` now fails immediately instead of reading as truthy. Return the
+sentinel; never test it.
+
+## Modified copies (`__replace__`, Python 3.13+)
+
+`copy.replace(obj, field=value)` returns a copy of an immutable object with some fields
+changed — the readable way to "edit" a frozen value object without mutating it. Dataclasses,
+named tuples, and `datetime` already support it; a plain class opts in with `__replace__`.
+
+```python
+import copy
+
+class Vector2D:
+    def __replace__(self, /, **changes: float) -> "Vector2D":
+        return Vector2D(changes.get("x", self.x), changes.get("y", self.y))
+
+shifted = copy.replace(origin, x=10)   # origin untouched; shifted is a new vector
+```
+
 ## The sequence protocol and slicing
 
 `__len__` + `__getitem__` make an object indexable, iterable, and sliceable. Handle

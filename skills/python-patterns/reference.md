@@ -54,6 +54,15 @@ class NotFoundError(AppError):
     """A requested resource does not exist."""
 ```
 
+Version notes:
+
+- On 3.14+ (PEP 758) you may drop the parentheses when catching several types without `as`:
+  `except (TypeError, ValueError):` can be written `except TypeError, ValueError:`.
+- Never `return`, `break`, or `continue` out of a `finally` block — it silently discards any
+  in-flight exception. Python 3.14+ flags this with a `SyntaxWarning` (PEP 765).
+- Mark obsolete APIs with `@warnings.deprecated("use X instead")` (3.13+, PEP 702): it warns
+  callers at runtime and is understood by type checkers.
+
 ## Fail fast
 
 Surface bad state at its source, loudly — never let it travel and corrupt something far
@@ -117,6 +126,19 @@ def first_match(values: list[str], prefix: str) -> str | None:
 
 - Alias complex unions: `Json = dict[str, "Json"] | list["Json"] | str | int | float | bool | None`.
 - Use `TypeVar` for generic helpers; `Protocol` for structural typing (see python-oop).
+- Narrow with `typing.TypeIs` (3.13+) for a predicate that both tests and narrows a type —
+  reads more naturally than `TypeGuard`:
+
+  ```python
+  def is_nonempty(value: str | None) -> TypeIs[str]:
+      return bool(value)
+  ```
+
+**Deferred annotations (3.14+).** PEP 649/749 evaluate annotations lazily, so
+`from __future__ import annotations` is no longer needed and forward references drop their
+quotes (`-> Vector2D`, not `-> "Vector2D"`). Inspect them at runtime with
+`annotationlib.get_annotations(...)`. On 3.13 and earlier, keep the quotes or the `__future__`
+import.
 
 ## Context managers
 
@@ -180,7 +202,14 @@ Export the public surface explicitly in `__init__.py` with `__all__`.
 ## Concurrency (pick the right model)
 
 - I/O-bound → threads (`concurrent.futures.ThreadPoolExecutor`) or `asyncio`.
-- CPU-bound → processes (`ProcessPoolExecutor`).
+- CPU-bound → processes (`ProcessPoolExecutor`), or **subinterpreters** on 3.14+
+  (`InterpreterPoolExecutor` from `concurrent.interpreters`, PEP 734) for cheaper in-process
+  isolation.
+- On a **free-threaded** build (officially supported in 3.14, PEP 779) threads can run
+  CPU-bound work in true parallel — but it is opt-in and ~5–10% slower single-threaded, so
+  processes stay the portable default.
+- Gotcha: on 3.14+ `multiprocessing`'s default start method is `forkserver` (not `fork`) on
+  Linux — keep worker entry points import-safe.
 - Don't reach for concurrency until a profiler says you need it.
 
 ## Anti-patterns

@@ -96,6 +96,15 @@ by_size = RotatingFileHandler("app.log", maxBytes=10_000_000, backupCount=5)
 by_day = TimedRotatingFileHandler("app.log", when="midnight", backupCount=7)
 ```
 
+To keep logging off the hot path, hand records to a `QueueHandler` and drain them in a
+background `QueueListener`. On Python 3.14+ the listener is a context manager, so you no
+longer pair `start()`/`stop()` by hand:
+
+```python
+with QueueListener(queue, file_handler):   # 3.14+: starts and stops automatically
+    run_application()
+```
+
 ## Lazy formatting and why it matters
 
 ```python
@@ -142,6 +151,11 @@ When in doubt, log an identifier, not the value. Redact before logging if you mu
 reference a sensitive field.
 
 ## Structured logging
+
+On Python 3.14+, template strings (`t"..."`, PEP 750) keep the static text and the
+interpolated values as separate parts, which is a useful building block for redacting or
+structuring fields safely instead of pre-formatting a message. Integration into logging
+tooling is still emerging — for now keep passing variables as `%`-args or `extra` fields.
 
 For machine-parsed logs (shipped to a log aggregator), attach fields via `extra` or use a
 structured logging library. Keep the message stable and put variables in fields:
