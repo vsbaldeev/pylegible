@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "python-dev",
-      "description": "Opinionated Python development skills: idiomatic patterns, pytest testing, logging discipline, OOP design, and the data model.",
+      "description": "Opinionated Python development skills: idiomatic patterns, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming.",
       "version": "0.1.0",
       "source": "./"
     }

@@ -1,5 +1,9 @@
 # python-dev
 
+[![CI](https://github.com/vsbaldeev/python-dev/actions/workflows/validate.yml/badge.svg)](https://github.com/vsbaldeev/python-dev/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.13%20%7C%203.14-blue.svg)](https://www.python.org/)
+
 An opinionated, installable plugin that encodes a house style for writing Python. Its
 overriding value: **code that is easy for a human to read, not merely correct.**
 
@@ -42,30 +46,43 @@ python-dev/
 
 ## Install — Claude Code
 
-1. Clone the repository:
+From inside Claude Code, add the marketplace and install the plugin:
 
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/python-dev.git
-   ```
+```text
+/plugin marketplace add vsbaldeev/python-dev
+/plugin install python-dev@python-dev
+```
 
-2. Register it as a local-directory plugin by merging these keys into
-   `~/.claude/settings.json` (do not replace the file). Set `path` to wherever you cloned it:
+The seven skills then appear in the skill listing and auto-trigger by description. Manage or
+update the plugin later with `/plugin`.
 
-   ```jsonc
-   {
-     "extraKnownMarketplaces": {
-       "python-dev": {
-         "source": { "source": "directory", "path": "/absolute/path/to/python-dev" }
-       }
-     },
-     "enabledPlugins": {
-       "python-dev@python-dev": true
-     }
-   }
-   ```
+<details>
+<summary>Install from source (local development)</summary>
 
-3. Open `/hooks` once or restart so Claude Code reloads config; the seven skills then appear
-   in the skill listing and auto-trigger by description.
+Clone and point Claude Code at the directory:
+
+```bash
+git clone https://github.com/vsbaldeev/python-dev.git
+claude --plugin-dir ./python-dev
+```
+
+Or register the clone as a local-directory marketplace by merging into `~/.claude/settings.json`
+(set `path` to where you cloned it):
+
+```jsonc
+{
+  "extraKnownMarketplaces": {
+    "python-dev": {
+      "source": { "source": "directory", "path": "/absolute/path/to/python-dev" }
+    }
+  },
+  "enabledPlugins": {
+    "python-dev@python-dev": true
+  }
+}
+```
+
+</details>
 
 ## Install — Codex
 
