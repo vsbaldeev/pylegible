@@ -10,6 +10,29 @@ cleverness conflict, choose clarity.
 - Prefer explicit over implicit. No hidden side effects, no magic.
 - A well-named function or variable removes the need for a comment.
 
+## Design principles
+
+Apply these when writing or reviewing any code. Depth and examples live in the
+`python-oop` and `python-patterns` skills.
+
+**SOLID**
+- **Single Responsibility** — one reason to change per class or module.
+- **Open/Closed** — extend by adding code, not editing what exists.
+- **Liskov Substitution** — a subtype must be usable anywhere its base is, without surprises.
+- **Interface Segregation** — many narrow interfaces over one fat one; no unused dependencies.
+- **Dependency Inversion** — depend on abstractions; inject dependencies, don't hard-code them.
+
+**General**
+- **Composition over inheritance** — combine small objects rather than building deep hierarchies.
+- **Law of Demeter** — talk only to immediate collaborators; `a.b.c.do()` is a smell.
+- **DRY** — one authoritative home per piece of knowledge, but don't force an abstraction just to dedupe.
+- **YAGNI** — build for the real requirement, not a hypothetical future one.
+- **KISS** — the simplest thing that works is usually right; complexity is a liability.
+- **Fail fast** — surface errors early and loudly; never silently propagate bad state.
+- **Separation of concerns** — keep I/O, business logic, and presentation in separate layers.
+- **Explicit over implicit** — behavior obvious from the code, not hidden in magic or globals.
+- **Principle of least surprise** — code should behave the way a reader expects.
+
 ## Naming
 
 - Never use single-letter variable names. Use names that convey meaning

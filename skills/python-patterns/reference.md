@@ -54,6 +54,54 @@ class NotFoundError(AppError):
     """A requested resource does not exist."""
 ```
 
+## Fail fast
+
+Surface bad state at its source, loudly — never let it travel and corrupt something far
+away, where the traceback no longer points at the cause. Validate inputs at the boundary
+and raise; do not paper over problems with a silent default.
+
+```python
+# Fail fast: reject the bad value where it enters
+def set_retry_count(count: int) -> None:
+    if count < 0:
+        raise ValueError(f"retry count must be >= 0, got {count}")
+    ...
+
+# Slow failure: a bad value survives and blows up somewhere unrelated later
+def set_retry_count(count: int) -> None:
+    self.count = count if count >= 0 else 0   # silently rewrites the caller's intent
+```
+
+The bare-`except`-then-`return None` anti-pattern is the opposite of failing fast: it hides
+the error and hands back a value that lies. Catch what you can handle; let the rest raise.
+
+## Separation of concerns
+
+Keep I/O, business logic, and presentation in separate functions or layers. A function
+that reads a file, computes a result, and prints it is three responsibilities welded
+together — hard to test and hard to reuse.
+
+```python
+def load_orders(path: Path) -> list[Order]:      # I/O
+    ...
+def total_due(orders: list[Order]) -> Money:     # logic — pure, trivially testable
+    ...
+def render_invoice(total: Money) -> str:         # presentation
+    ...
+```
+
+The pure logic in the middle needs no files or mocks to test. Logs and diagnostics are a
+presentation concern too — see python-logging for stdout-vs-stderr.
+
+## Simplicity: KISS, YAGNI, least surprise
+
+- **KISS** — reach for the simplest construct that works. A loop over a clever nested
+  comprehension; a function over a class; a dict over a small framework.
+- **YAGNI** — build for the requirement in front of you, not an imagined future one.
+  Add the extension point when the second case actually arrives.
+- **Least surprise** — code should behave the way a reader expects. No side effects hidden
+  behind an innocent-looking name; no function that returns different types by mood.
+
 ## Type hints
 
 Annotate every signature. Use built-in generics; use `X | None` over `Optional[X]`.

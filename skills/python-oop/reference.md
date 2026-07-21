@@ -85,6 +85,25 @@ class OrderService:
 Inherit only for a genuine "is-a" relationship where the subclass is substitutable for
 the base (Liskov). If you inherit to reuse a method, compose instead.
 
+## Law of Demeter ("don't talk to strangers")
+
+A method should call only its own methods, its parameters, objects it creates, and its
+direct attributes — not reach through them. `order.customer.address.city` couples the
+caller to the whole chain; every intermediate type is now something that can break it.
+
+```python
+# Reaches through internals — knows about customer AND address structure
+def label(order: Order) -> str:
+    return f"{order.customer.address.city}"
+
+# Ask the immediate collaborator; let it decide how to answer
+def label(order: Order) -> str:
+    return order.shipping_city()          # Order delegates to customer/address internally
+```
+
+Tell an object what you want done; don't fetch its parts and do the work yourself
+("Tell, Don't Ask"). A long dotted chain is the smell that flags a missing method.
+
 ## SOLID, applied pragmatically
 
 - **S**ingle responsibility — one reason to change per class. Split god classes.

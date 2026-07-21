@@ -72,4 +72,5 @@ change to `NotificationService`.
 This skill owns class/type design. Special methods (`__eq__`, `__iter__`, `__hash__`),
 descriptors, and custom sequences → **python-data-model**. General idioms and error
 handling → **python-patterns**. See `reference.md` for dataclasses, Protocol vs ABC,
-SOLID applied to Python, and `__slots__`.
+SOLID applied to Python, the Law of Demeter, and `__slots__`. The project `CLAUDE.md`
+lists the full design-principle set.
