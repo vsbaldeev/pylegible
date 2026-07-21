@@ -1,6 +1,6 @@
-# python-dev
+# pylegible
 
-[![CI](https://github.com/vsbaldeev/python-dev/actions/workflows/validate.yml/badge.svg)](https://github.com/vsbaldeev/python-dev/actions/workflows/validate.yml)
+[![CI](https://github.com/vsbaldeev/pylegible/actions/workflows/validate.yml/badge.svg)](https://github.com/vsbaldeev/pylegible/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 
@@ -36,7 +36,7 @@ under the hood.
 ## Layout
 
 ```
-python-dev/
+pylegible/
 ├── .claude-plugin/{plugin.json, marketplace.json}   Claude Code plugin manifest
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
@@ -49,8 +49,8 @@ python-dev/
 From inside Claude Code, add the marketplace and install the plugin:
 
 ```text
-/plugin marketplace add vsbaldeev/python-dev
-/plugin install python-dev@python-dev
+/plugin marketplace add vsbaldeev/pylegible
+/plugin install pylegible@pylegible
 ```
 
 The seven skills then appear in the skill listing and auto-trigger by description. Manage or
@@ -62,8 +62,8 @@ update the plugin later with `/plugin`.
 Clone and point Claude Code at the directory:
 
 ```bash
-git clone https://github.com/vsbaldeev/python-dev.git
-claude --plugin-dir ./python-dev
+git clone https://github.com/vsbaldeev/pylegible.git
+claude --plugin-dir ./pylegible
 ```
 
 Or register the clone as a local-directory marketplace by merging into `~/.claude/settings.json`
@@ -72,12 +72,12 @@ Or register the clone as a local-directory marketplace by merging into `~/.claud
 ```jsonc
 {
   "extraKnownMarketplaces": {
-    "python-dev": {
-      "source": { "source": "directory", "path": "/absolute/path/to/python-dev" }
+    "pylegible": {
+      "source": { "source": "directory", "path": "/absolute/path/to/pylegible" }
     }
   },
   "enabledPlugins": {
-    "python-dev@python-dev": true
+    "pylegible@pylegible": true
   }
 }
 ```
