@@ -5,6 +5,9 @@
   "author": {
     "name": "vsbaldeev"
   },
+  "homepage": "https://github.com/vsbaldeev/python-dev",
+  "repository": "https://github.com/vsbaldeev/python-dev",
+  "license": "MIT",
   "keywords": [
     "python",
     "patterns",
