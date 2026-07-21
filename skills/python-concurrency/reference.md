@@ -68,6 +68,9 @@ Start methods: `spawn` (Windows/macOS default) and `forkserver` (Linux default f
 re-import your module in each worker, so **any import-time side effect runs again per
 worker**. Keep top-level code to definitions; put actions under `if __name__ == "__main__":`.
 
+Workers must not each open the same log file — that is shared mutable state. Route worker
+logs through a `QueueHandler` to one listener that owns the file; see **python-logging**.
+
 ## asyncio
 
 One `asyncio.run()` at the top; everything below is `async def`. Group concurrent tasks with

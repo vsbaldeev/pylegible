@@ -105,6 +105,37 @@ with QueueListener(queue, file_handler):   # 3.14+: starts and stops automatical
     run_application()
 ```
 
+## Logging from multiple processes
+
+A `FileHandler` (or `RotatingFileHandler`) is **not** safe for several processes writing the
+same file at once — records interleave and rotation races lose data. Let exactly one process
+own the file: each worker's root logger gets a single `QueueHandler` on a shared cross-process
+queue, and one `QueueListener` in the main process owns the real handler and is the only
+writer. On `spawn`/`forkserver` (the 3.14 default) workers do not inherit handlers, so
+configure each one in a pool `initializer`.
+
+```python
+def configure_worker_logging(log_queue) -> None:
+    """Point this worker's root logger at the shared queue (runs once per worker)."""
+    handler = QueueHandler(log_queue)
+    root = logging.getLogger()
+    root.handlers.clear()
+    root.addHandler(handler)
+    root.setLevel(logging.INFO)
+
+
+def main(jobs: list[Job]) -> None:
+    """Run jobs across processes; one listener owns the log file."""
+    log_queue = Manager().Queue(-1)                    # cross-process, not queue.Queue
+    file_handler = RotatingFileHandler("app.log", maxBytes=10_000_000, backupCount=5)
+    with QueueListener(log_queue, file_handler):       # 3.14+: starts/stops automatically
+        with ProcessPoolExecutor(initializer=configure_worker_logging, initargs=(log_queue,)) as pool:
+            list(pool.map(handle_job, jobs))
+```
+
+Use `%(processName)s` in the formatter so each line names the worker that emitted it. Choosing
+and running the process pool itself → **python-concurrency**.
+
 ## Lazy formatting and why it matters
 
 ```python
