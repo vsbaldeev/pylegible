@@ -1,11 +1,21 @@
 # python-dev
 
-An opinionated, installable Claude Code plugin that encodes a house style for writing
-Python. Its overriding value: **code that is easy for a human to read, not merely
-correct.**
+An opinionated, installable plugin that encodes a house style for writing Python. Its
+overriding value: **code that is easy for a human to read, not merely correct.**
 
-It is also a teaching artifact — see [`docs/how-it-works.md`](docs/how-it-works.md) for
-a from-scratch explanation of how hooks, skills, and `CLAUDE.md` differ under the hood.
+It works with **Claude Code** (as a plugin) and **Codex** (as Agent Skills + `AGENTS.md`),
+and it doubles as a teaching artifact — see [`docs/how-it-works.md`](docs/how-it-works.md)
+for a from-scratch explanation of how hooks, skills, and `CLAUDE.md`/`AGENTS.md` differ
+under the hood.
+
+## What's inside
+
+- **Five topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+  `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
+  `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
+- **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
+  and [`AGENTS.md`](AGENTS.md) (Codex), kept in sync.
+- Reference catalogs current through **Python 3.13 / 3.14** (features flagged by version).
 
 ## Skills
 
@@ -14,16 +24,24 @@ a from-scratch explanation of how hooks, skills, and `CLAUDE.md` differ under th
 | **python-patterns** | writing or reviewing everyday Python — idioms, typing, error handling, comprehensions, packaging |
 | **python-testing** | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
 | **python-logging** | adding logging, choosing a level, deciding stdout vs stderr, or replacing `print` |
-| **python-oop** | designing classes — dataclasses, protocols, composition over inheritance, SOLID |
-| **python-data-model** | implementing dunder methods, custom sequences/iterators, descriptors, or deep decorators |
+| **python-oop** | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
+| **python-data-model** | dunder methods, custom sequences/iterators, descriptors, decorator authoring |
 
-Each skill keeps a lean `SKILL.md` (loads when it triggers) and a `reference.md` with the
-depth (loads only when needed). Scopes are non-overlapping: each `SKILL.md` ends with a
-**Boundary** line pointing at the right skill for adjacent topics.
+## Layout
 
-## Install
+```
+python-dev/
+├── .claude-plugin/{plugin.json, marketplace.json}   Claude Code plugin manifest
+├── CLAUDE.md                                          always-on rules (Claude Code)
+├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
+├── docs/how-it-works.md                               hooks vs skills vs CLAUDE.md
+└── skills/<name>/{SKILL.md, reference.md}             the five skills
+```
 
-This is a local-directory plugin. Enable it in `~/.claude/settings.json`:
+## Install — Claude Code
+
+Local-directory plugin. Merge these keys into `~/.claude/settings.json` (do not replace the
+file):
 
 ```jsonc
 {
@@ -38,12 +56,26 @@ This is a local-directory plugin. Enable it in `~/.claude/settings.json`:
 }
 ```
 
-Merge those keys into your existing settings (do not replace the file). After editing,
-open `/hooks` once or restart so Claude Code reloads config, then the five skills appear
-in the skill listing.
+After editing, open `/hooks` once or restart so Claude Code reloads config; the five skills
+then appear in the skill listing and auto-trigger by description.
 
-## Conventions
+## Install — Codex
 
-All examples obey the rules in [`CLAUDE.md`](CLAUDE.md): no single-letter names, no
-single-underscore names, functions ≤40 body lines, Google-style docstrings, specific
-exceptions, and `logging` instead of `print`.
+The skills follow the same Agent Skills standard Codex uses, so no content changes are
+needed — only placement. Codex reads `AGENTS.md` automatically; to expose the skills:
+
+- **Per-repo:** `ln -s ../skills .agents/skills` from the repo root — Codex discovers skills
+  in `.agents/skills/` and implicitly invokes them by description.
+- **Global:** copy or symlink each skill directory into `~/.codex/skills/`.
+
+Explicit invocation in Codex is `$python-logging` (etc.). The `.claude-plugin/` manifest and
+any Claude Code hooks do not apply to Codex.
+
+## Conventions and principles
+
+All examples obey [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md): no single-letter names
+(except `x`/`y` vector components), no leading single underscore, functions ≤40 body lines,
+Google-style docstrings, specific exceptions, and `logging` instead of `print`. Both files
+also carry the full design-principle set — **SOLID** plus composition over inheritance, Law
+of Demeter, DRY, YAGNI, KISS, fail fast, separation of concerns, explicit over implicit, and
+least surprise.
