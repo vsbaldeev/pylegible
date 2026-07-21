@@ -199,19 +199,6 @@ project/
 
 Export the public surface explicitly in `__init__.py` with `__all__`.
 
-## Concurrency (pick the right model)
-
-- I/O-bound → threads (`concurrent.futures.ThreadPoolExecutor`) or `asyncio`.
-- CPU-bound → processes (`ProcessPoolExecutor`), or **subinterpreters** on 3.14+
-  (`InterpreterPoolExecutor` from `concurrent.interpreters`, PEP 734) for cheaper in-process
-  isolation.
-- On a **free-threaded** build (officially supported in 3.14, PEP 779) threads can run
-  CPU-bound work in true parallel — but it is opt-in and ~5–10% slower single-threaded, so
-  processes stay the portable default.
-- Gotcha: on 3.14+ `multiprocessing`'s default start method is `forkserver` (not `fork`) on
-  Linux — keep worker entry points import-safe.
-- Don't reach for concurrency until a profiler says you need it.
-
 ## Anti-patterns
 
 | Anti-pattern | Instead |

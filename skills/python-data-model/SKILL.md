@@ -77,6 +77,7 @@ class Vector2D:
 This skill owns the data model and metaprogramming, including decorator authoring
 (`functools.wraps`, parameterized, and class-based). Ordinary class design (dataclasses,
 Protocol vs ABC, composition) → **python-oop**. General idioms and error handling →
-**python-patterns**. See `reference.md` for the sequence protocol,
-slicing, closures, descriptors, advanced decorators, `__bool__`/`__format__`/`__call__`,
-alternative constructors, `collections.abc`, structural pattern matching, and async protocols.
+**python-patterns**. Choosing and running a concurrency model (asyncio, threads, processes) →
+**python-concurrency**. See `reference.md` for the sequence protocol, slicing, closures,
+descriptors, advanced decorators, `__bool__`/`__format__`/`__call__`, alternative
+constructors, `collections.abc`, structural pattern matching, and async protocols.
