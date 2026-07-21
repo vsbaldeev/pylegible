@@ -73,6 +73,8 @@ def fetch_all(urls: list[str], client: HttpClient) -> dict[str, bytes]:
 - Adding concurrency before profiling — more complexity, no measured gain.
 - Blocking the event loop: calling `requests.get` or `time.sleep` inside a coroutine. Use the
   async client, or `asyncio.to_thread` for unavoidable blocking calls.
+- Spawning one `Thread` (or `Process`) per work item for on-demand fan-out — memory blows up
+  and the program falls over under load. Submit to a bounded executor instead.
 - Sharing a mutable `dict`/`list` across threads with no lock — races and lost updates.
 - Fire-and-forget tasks: creating a task and never awaiting it, so its exception vanishes.
   Use `TaskGroup`, which awaits and surfaces failures.

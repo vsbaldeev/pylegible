@@ -29,6 +29,11 @@ def totals_by_report(report_ids: list[int], store: ReportStore) -> dict[int, int
         return {report_id: future.result() for report_id, future in futures.items()}
 ```
 
+The pool also bounds fan-out: submit N items to a fixed `max_workers` and the executor
+queues the rest. Never spawn a fresh `Thread` per item for on-demand fan-out — a burst of
+work then creates a burst of threads, exhausting memory and starving the scheduler. A bounded
+executor (or a worker pool draining a `queue.Queue`) keeps the thread count flat under load.
+
 Guard shared mutable state with a `Lock`, or avoid it entirely by returning values:
 
 ```python
@@ -121,3 +126,15 @@ Until these settle, processes remain the portable choice for CPU parallelism.
   a bare coroutine does *not* cede control: `docs.python.org/3/howto/a-conceptual-overview-of-asyncio.html`
 - **Python support for free threading** — building/detecting the no-GIL interpreter and its
   current caveats: `docs.python.org/3/howto/free-threading-python.html`
+
+## Further reading
+
+The judgment defaults here are distilled from a few standard references — reach for these
+when a bottleneck needs more than this catalog gives:
+
+- **Effective Python**, 3rd ed. (Brett Slatkin, 2024) — items 67–79 on concurrency, in the
+  same best-practice format as these rules; the closest match to how this skill thinks.
+- **Python Concurrency with asyncio** (Matthew Fowler, Manning, 2022) — a full book on the
+  asyncio model: event loop internals, `aiohttp`, non-blocking drivers, CPU-bound offload.
+- **Python Cookbook**, 3rd ed. (David Beazley & Brian K. Jones, 2013) — chapter 12's classic
+  threads/queues/pools recipes (pre-asyncio, but the primitives are unchanged).
