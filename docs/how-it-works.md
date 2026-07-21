@@ -44,10 +44,11 @@ lean and push depth into a sibling `reference.md`, which the model opens only wh
 needs the details. Three tiers — description (always), SKILL.md (on trigger),
 reference.md (on demand) — each paid for only when reached.
 
-## Hooks, dissected — your own skill-usage logger
+## Hooks, dissected — a skill-usage logger
 
-Earlier we built a logger that records every skill invocation. It is two hooks wired
-into `~/.claude/settings.json`, both pointing at scripts in `~/.claude/skill-usage/`:
+A useful worked example: a small logger that records every skill invocation, so you can see
+whether skills fire on their own. It is two hooks wired into `~/.claude/settings.json`, each
+pointing at a script (here under `~/.claude/skill-usage/`):
 
 ```jsonc
 "hooks": {

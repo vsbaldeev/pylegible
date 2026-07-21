@@ -1,0 +1,37 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON manifests
+        run: |
+          for manifest in .claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+            echo "checking $manifest"
+            jq -e . "$manifest" > /dev/null
+          done
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          exit_code=0
+          for skill in skills/*/SKILL.md; do
+            folder=$(basename "$(dirname "$skill")")
+            name=$(awk '/^name:/{print $2; exit}' "$skill")
+            has_desc=$(grep -c '^description:' "$skill")
+            if [ "$folder" != "$name" ]; then
+              echo "FAIL $skill: name '$name' does not match folder '$folder'"
+              exit_code=1
+            fi
+            if [ "$has_desc" -eq 0 ]; then
+              echo "FAIL $skill: missing description"
+              exit_code=1
+            fi
+            echo "ok   $skill (name=$name)"
+          done
+          exit $exit_code
