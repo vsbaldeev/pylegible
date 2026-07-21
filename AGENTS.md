@@ -53,7 +53,7 @@ Principle of least surprise.
 
 ## Skills
 
-This project ships six topic skills, each a `SKILL.md` (lean, loaded on demand) plus a
+This project ships seven topic skills, each a `SKILL.md` (lean, loaded on demand) plus a
 `reference.md` (depth). Scopes are non-overlapping — each `SKILL.md` ends with a **Boundary**
 line pointing at the right skill for adjacent topics.
 
@@ -63,7 +63,8 @@ line pointing at the right skill for adjacent topics.
 | `python-testing` | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
 | `python-logging` | adding logging, choosing a level, stdout vs stderr, replacing `print` |
 | `python-oop` | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
-| `python-data-model` | dunder methods, custom sequences/iterators, descriptors, decorator authoring |
+| `python-data-model` | dunder methods, operators, custom sequences/iterators, `with`, pattern matching |
+| `python-metaprogramming` | decorators, descriptors, metaclasses, `__init_subclass__`, dynamic attributes |
 | `python-concurrency` | choosing threads/asyncio/processes, executors, races, the GIL, free-threading |
 
 **Making Codex pick them up.** The skills live under `skills/` (Claude Code plugin layout).

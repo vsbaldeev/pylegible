@@ -1,7 +1,7 @@
 {
   "name": "python-dev",
   "version": "0.1.0",
-  "description": "Opinionated Python development skills: idiomatic patterns, pytest testing, logging discipline, OOP design, the data model, and concurrency. Optimized for code that is easy for humans to read.",
+  "description": "Opinionated Python development skills: idiomatic patterns, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming. Optimized for code that is easy for humans to read.",
   "author": {
     "name": "vsbaldeev"
   },
@@ -14,6 +14,7 @@
     "oop",
     "data-model",
     "concurrency",
+    "metaprogramming",
     "readability"
   ]
 }
