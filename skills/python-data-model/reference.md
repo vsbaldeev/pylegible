@@ -20,6 +20,36 @@ def __repr__(self) -> str:
     return f"Card({self.rank!r}, {self.suit!r})"
 ```
 
+## Truthiness (`__bool__`)
+
+Every instance is truthy by default. Define `__bool__` to control what `if obj:` means; if
+it is absent, Python falls back to `__len__` (length zero is false). Keep it cheap.
+
+```python
+class Vector2D:
+    def __bool__(self) -> bool:
+        return bool(self.x or self.y)   # the zero vector is falsy
+```
+
+## Formatting (`__format__`)
+
+`format(obj, spec)` and an f-string's `f"{obj:spec}"` both dispatch to `obj.__format__(spec)`.
+An empty spec should match `str(obj)`; otherwise interpret the spec however suits the type.
+
+```python
+class Temperature:
+    def __init__(self, celsius: float) -> None:
+        self.celsius = celsius
+
+    def __str__(self) -> str:
+        return f"{self.celsius}C"
+
+    def __format__(self, spec: str) -> str:
+        if not spec:
+            return str(self)
+        return f"{format(self.celsius, spec)}C"   # f"{temp:.1f}" -> "20.5C"
+```
+
 ## Rich comparison and hashing
 
 Implement `__eq__` and pair it with `__hash__`. Equal objects must have equal hashes; base
@@ -172,6 +202,122 @@ class Order:
 Descriptors power `property`, methods, `classmethod`, and `staticmethod` under the hood —
 reach for a plain `@property` first, and use a custom descriptor only when the same
 managed behavior repeats across several attributes.
+
+## Callable instances (`__call__`)
+
+Define `__call__` to make an instance behave like a function while keeping state. Prefer it
+over a closure when the object also needs other methods or a meaningful `repr`.
+
+```python
+class RateLimiter:
+    def __init__(self, per_minute: int) -> None:
+        self.per_minute = per_minute
+        self.calls = 0
+
+    def __call__(self, request: Request) -> bool:
+        """Return True if this request stays within the limit."""
+        self.calls += 1
+        return self.calls <= self.per_minute
+```
+
+## Alternative constructors (`@classmethod`)
+
+Offer a named, secondary way to build an instance with a `@classmethod`. Return `cls(...)`
+so subclasses build their own type.
+
+```python
+class Vector2D:
+    @classmethod
+    def from_polar(cls, radius: float, angle: float) -> "Vector2D":
+        """Build a vector from polar coordinates."""
+        return cls(radius * math.cos(angle), radius * math.sin(angle))
+```
+
+Use `@staticmethod` only for a helper that needs neither `self` nor `cls` — often a plain
+module-level function reads better.
+
+## Reusing the ABCs in `collections.abc`
+
+Inherit from an ABC like `Sequence` or `Mapping` and you get mixin methods for free: define a
+couple of required methods and the ABC supplies the rest, correctly.
+
+```python
+from collections.abc import Sequence
+
+class Deck(Sequence):
+    def __init__(self, cards: list[Card]) -> None:
+        self.cards = cards
+
+    def __len__(self) -> int:
+        return len(self.cards)
+
+    def __getitem__(self, position: int | slice) -> "Card | list[Card]":
+        return self.cards[position]
+    # Sequence now supplies __contains__, __iter__, __reversed__, index, count
+```
+
+In annotations, prefer the abstract type you actually need (`Iterable`, `Mapping`,
+`Sequence`) over a concrete `list`/`dict` when you only depend on the protocol.
+
+## Structural pattern matching (`__match_args__`)
+
+`match`/`case` can destructure your objects positionally when you declare `__match_args__`
+(dataclasses set it from field order automatically).
+
+```python
+class Point:
+    __match_args__ = ("x", "y")
+
+    def __init__(self, x: float, y: float) -> None:
+        self.x = x
+        self.y = y
+
+def quadrant(point: Point) -> str:
+    """Name the quadrant a point sits in."""
+    match point:
+        case Point(0, 0):
+            return "origin"
+        case Point(x, y) if x > 0 and y > 0:
+            return "first"
+        case _:
+            return "other"
+```
+
+## Async protocols
+
+Async iteration and async context managers mirror their sync forms with `a`-prefixed
+dunders, driven by `async for` and `async with`.
+
+```python
+class Ticker:
+    def __init__(self, interval: float, count: int) -> None:
+        self.interval = interval
+        self.count = count
+
+    def __aiter__(self) -> "Ticker":
+        self.remaining = self.count
+        return self
+
+    async def __anext__(self) -> int:
+        if self.remaining == 0:
+            raise StopAsyncIteration
+        await asyncio.sleep(self.interval)
+        self.remaining -= 1
+        return self.remaining
+
+
+class Connection:
+    async def __aenter__(self) -> "Connection":
+        await self.open()
+        return self
+
+    async def __aexit__(self, exc_type, exc, traceback) -> bool:
+        await self.close()
+        return False           # do not suppress exceptions
+```
+
+Prefer an `async def` generator (with `yield`) over a hand-written `__anext__` class, just as
+with sync iterators.
 
 ## Context managers
 
