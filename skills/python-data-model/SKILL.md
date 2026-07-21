@@ -2,9 +2,9 @@
 name: python-data-model
 description: >
   Use when implementing special ("dunder") methods, making a class support operators,
-  len(), iteration, unpacking, or use as a dict key, building custom sequences or
-  iterators, writing descriptors, or writing parameterized or class-based decorators.
-  For ordinary class design use python-oop; for general idioms use python-patterns.
+  len(), iteration, unpacking, use as a dict key, `with`, formatting, or structural pattern
+  matching, and building custom sequences or iterators. For decorators, descriptors, and
+  metaclasses use python-metaprogramming; for ordinary class design use python-oop.
 ---
 
 # Python Data Model
@@ -20,7 +20,7 @@ only the protocol you actually need, and honor its contracts. Depth in `referenc
 
 - Making a class behave like a number, sequence, or container.
 - Supporting operators, iteration, unpacking, or dict-key use.
-- Writing a descriptor (reusable managed attribute) or a non-trivial decorator.
+- Controlling `with`, `format()`, truthiness, or `match`/`case` for your type.
 
 ## Contracts you must not break
 
@@ -74,10 +74,11 @@ class Vector2D:
 
 ## Boundary
 
-This skill owns the data model and metaprogramming, including decorator authoring
-(`functools.wraps`, parameterized, and class-based). Ordinary class design (dataclasses,
-Protocol vs ABC, composition) → **python-oop**. General idioms and error handling →
-**python-patterns**. Choosing and running a concurrency model (asyncio, threads, processes) →
-**python-concurrency**. See `reference.md` for the sequence protocol, slicing, closures,
-descriptors, advanced decorators, `__bool__`/`__format__`/`__call__`, alternative
-constructors, `collections.abc`, structural pattern matching, and async protocols.
+This skill owns the data model — the dunder methods that make an object work with Python's
+own syntax. Decorators, descriptors, metaclasses, and dynamic attributes →
+**python-metaprogramming**. Ordinary class design (dataclasses, Protocol vs ABC, composition)
+→ **python-oop**. General idioms and error handling → **python-patterns**. Choosing and
+running a concurrency model (asyncio, threads, processes) → **python-concurrency**. See
+`reference.md` for the sequence protocol, slicing, rich comparison and hashing,
+`__bool__`/`__format__`/`__call__`, alternative constructors, `collections.abc`, structural
+pattern matching, and async protocols.

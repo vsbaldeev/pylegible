@@ -4,7 +4,8 @@ description: >
   Use when designing Python classes and object structure — deciding whether something
   should be a class at all, using dataclasses, defining interfaces with Protocol or ABC,
   choosing composition over inheritance, applying SOLID pragmatically, or encapsulating
-  state. For dunder methods, descriptors, and custom iteration use python-data-model.
+  state. For dunder methods and custom iteration use python-data-model; for descriptors,
+  decorators, and metaclasses use python-metaprogramming.
 ---
 
 # Python OOP
@@ -69,8 +70,9 @@ change to `NotificationService`.
 
 ## Boundary
 
-This skill owns class/type design. Special methods (`__eq__`, `__iter__`, `__hash__`),
-descriptors, and custom sequences → **python-data-model**. General idioms and error
+This skill owns class/type design. Special methods (`__eq__`, `__iter__`, `__hash__`) and
+custom sequences → **python-data-model**. Descriptors, decorators, and metaclasses →
+**python-metaprogramming**. General idioms and error
 handling → **python-patterns**. See `reference.md` for dataclasses, Protocol vs ABC,
 SOLID applied to Python, the Law of Demeter, and `__slots__`. The project `CLAUDE.md`
 lists the full design-principle set.

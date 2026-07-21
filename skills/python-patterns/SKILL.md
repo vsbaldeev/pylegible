@@ -60,7 +60,8 @@ active_admin_emails = [u.email for g in groups for u in g.users if u.active if u
 ## Boundary
 
 This skill owns general idioms. Class/dataclass/protocol design → **python-oop**. Dunder
-methods, descriptors, custom iterators, decorator authoring → **python-data-model**. Tests →
+methods and custom iterators → **python-data-model**. Decorators, descriptors, and metaclasses
+→ **python-metaprogramming**. Tests →
 **python-testing**. Logging → **python-logging**. Threads/asyncio/processes → **python-concurrency**.
 See `reference.md` for the full catalog (typing, context managers, generators, packaging,
 anti-patterns) and the

@@ -10,7 +10,7 @@ under the hood.
 
 ## What's inside
 
-- **Six topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+- **Seven topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
   `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
   `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
 - **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
@@ -25,7 +25,8 @@ under the hood.
 | **python-testing** | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
 | **python-logging** | adding logging, choosing a level, deciding stdout vs stderr, or replacing `print` |
 | **python-oop** | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
-| **python-data-model** | dunder methods, custom sequences/iterators, descriptors, decorator authoring |
+| **python-data-model** | dunder methods, operators, custom sequences/iterators, `with`, pattern matching |
+| **python-metaprogramming** | decorators, descriptors, metaclasses, `__init_subclass__`, dynamic attributes |
 | **python-concurrency** | choosing threads/asyncio/processes, executors, races, the GIL, free-threading |
 
 ## Layout
@@ -36,7 +37,7 @@ python-dev/
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
 ├── docs/how-it-works.md                               hooks vs skills vs CLAUDE.md
-└── skills/<name>/{SKILL.md, reference.md}             the six skills
+└── skills/<name>/{SKILL.md, reference.md}             the seven skills
 ```
 
 ## Install — Claude Code
@@ -63,7 +64,7 @@ python-dev/
    }
    ```
 
-3. Open `/hooks` once or restart so Claude Code reloads config; the six skills then appear
+3. Open `/hooks` once or restart so Claude Code reloads config; the seven skills then appear
    in the skill listing and auto-trigger by description.
 
 ## Install — Codex
