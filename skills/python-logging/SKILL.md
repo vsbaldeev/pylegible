@@ -78,6 +78,8 @@ def charge_order(order: Order, payments: PaymentClient) -> str:
 
 ## Boundary
 
-This skill owns logging: levels, what/where to log, configuration. How to *catch and
-raise* exceptions → **python-patterns**. See `reference.md` for handlers, formatters,
-structured logging, and application setup.
+This skill owns logging: levels, what/where to log, configuration — including routing logs
+out of threads and worker processes with `QueueHandler`/`QueueListener`. How to *catch and
+raise* exceptions → **python-patterns**. Choosing and running the pool those workers live in
+(threads vs asyncio vs processes) → **python-concurrency**. See `reference.md` for handlers,
+formatters, structured logging, logging from multiple processes, and application setup.

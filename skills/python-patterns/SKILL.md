@@ -2,10 +2,12 @@
 name: python-patterns
 description: >
   Use when writing or reviewing everyday Python — choosing between a loop and a
-  comprehension, adding type hints, handling errors and exceptions, using context
-  managers, organizing imports, or deciding the idiomatic ("Pythonic") way to express
-  something. For class design use python-oop, for dunder methods use python-data-model,
-  for tests use python-testing, for logging use python-logging.
+  comprehension, adding type hints, handling errors and exceptions, using `with` blocks and
+  contextlib, organizing imports, or deciding the idiomatic ("Pythonic") way to express
+  something. For class design use python-oop; for dunder methods, including implementing
+  `__enter__`/`__exit__`, use python-data-model; for decorators, descriptors, and metaclasses
+  use python-metaprogramming; for threads, asyncio, and processes use python-concurrency;
+  for tests use python-testing; for logging use python-logging.
 ---
 
 # Python Patterns

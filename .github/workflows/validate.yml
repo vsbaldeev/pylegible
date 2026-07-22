@@ -17,6 +17,24 @@ jobs:
             jq -e . "$manifest" > /dev/null
           done
 
+      - name: Check plugin and marketplace agree
+        run: |
+          plugin_name=$(jq -r .name .claude-plugin/plugin.json)
+          plugin_version=$(jq -r .version .claude-plugin/plugin.json)
+          entry_name=$(jq -r '.plugins[0].name' .claude-plugin/marketplace.json)
+          entry_version=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)
+          exit_code=0
+          if [ "$plugin_name" != "$entry_name" ]; then
+            echo "FAIL plugin name '$plugin_name' != marketplace entry '$entry_name'"
+            exit_code=1
+          fi
+          if [ "$plugin_version" != "$entry_version" ]; then
+            echo "FAIL plugin version '$plugin_version' != marketplace entry '$entry_version'"
+            exit_code=1
+          fi
+          echo "ok   $plugin_name@$plugin_version"
+          exit $exit_code
+
       - name: Validate SKILL.md frontmatter
         run: |
           exit_code=0
