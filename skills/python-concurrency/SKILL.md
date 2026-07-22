@@ -47,7 +47,8 @@ not *computing*. For computing, use processes (or a free-threaded build — see 
 - asyncio: one `asyncio.run()` entry point; group concurrent work with `asyncio.TaskGroup`
   (3.11+); never call blocking code in a coroutine — offload it with `asyncio.to_thread`.
 - Processes: keep worker entry points import-safe (guard with `if __name__ == "__main__":`);
-  on 3.14 the default start method is `forkserver`, so module import must have no side effects.
+  on Linux the default start method is `forkserver` from 3.14 (elsewhere `spawn`), so module
+  import must have no side effects.
 
 ## Example
 
@@ -59,10 +60,10 @@ def fetch_all(urls: list[str], client: HttpClient) -> dict[str, bytes]:
     results: dict[str, bytes] = {}
     with ThreadPoolExecutor(max_workers=8) as pool:
         future_to_url = {pool.submit(client.get, url): url for url in urls}
-        for future in as_completed(future_to_url):
+        for future in as_completed(future_to_url, timeout=30):   # bounds the whole wait
             url = future_to_url[future]
             try:
-                results[url] = future.result(timeout=30)
+                results[url] = future.result()          # already done — returns immediately
             except HttpError:
                 logger.exception("fetch failed for %s", url)   # one failure, not all
     return results
@@ -80,6 +81,8 @@ def fetch_all(urls: list[str], client: HttpClient) -> dict[str, bytes]:
   Use `TaskGroup`, which awaits and surfaces failures.
 - Using processes for I/O-bound work — pickling and process startup cost for no benefit.
 - Never calling `future.result()`, silently swallowing every worker exception.
+- Passing `timeout=` to `future.result()` inside an `as_completed` loop — the future is already
+  done, so the timeout never fires. Put it on `as_completed(futures, timeout=...)` instead.
 
 ## Boundary
 

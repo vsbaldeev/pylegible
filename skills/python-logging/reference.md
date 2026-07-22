@@ -115,7 +115,7 @@ writer. On `spawn`/`forkserver` (the 3.14 default) workers do not inherit handle
 configure each one in a pool `initializer`.
 
 ```python
-def configure_worker_logging(log_queue) -> None:
+def configure_worker_logging(log_queue: "queue.Queue[logging.LogRecord]") -> None:
     """Point this worker's root logger at the shared queue (runs once per worker)."""
     handler = QueueHandler(log_queue)
     root = logging.getLogger()
@@ -128,12 +128,17 @@ def main(jobs: list[Job]) -> None:
     """Run jobs across processes; one listener owns the log file."""
     log_queue = Manager().Queue(-1)                    # cross-process, not queue.Queue
     file_handler = RotatingFileHandler("app.log", maxBytes=10_000_000, backupCount=5)
+    file_handler.setFormatter(logging.Formatter(
+        "%(asctime)s %(levelname)-8s %(processName)s %(name)s %(message)s"
+    ))
     with QueueListener(log_queue, file_handler):       # 3.14+: starts/stops automatically
         with ProcessPoolExecutor(initializer=configure_worker_logging, initargs=(log_queue,)) as pool:
             list(pool.map(handle_job, jobs))
 ```
 
-Use `%(processName)s` in the formatter so each line names the worker that emitted it. Choosing
+The formatter belongs on the listener's handler, not on the workers': a `QueueHandler` ships the
+record itself, so formatting happens once, in the process that owns the file. Keep
+`%(processName)s` in that format string so each line names the worker that emitted it. Choosing
 and running the process pool itself → **python-concurrency**.
 
 ## Lazy formatting and why it matters

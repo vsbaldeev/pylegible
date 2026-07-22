@@ -1,6 +1,6 @@
 {
   "name": "pylegible",
-  "description": "Local marketplace for the pylegible skills plugin",
+  "description": "Marketplace for the pylegible Python skills plugin",
   "owner": {
     "name": "vsbaldeev"
   },
@@ -8,7 +8,7 @@
     {
       "name": "pylegible",
       "description": "Opinionated Python development skills: idiomatic patterns, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./"
     }
   ]

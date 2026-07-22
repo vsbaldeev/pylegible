@@ -58,16 +58,23 @@ class Handler:
 
     def __init_subclass__(cls, /, key: str, **kwargs: object) -> None:
         super().__init_subclass__(**kwargs)
+        if key in cls.registry:
+            raise ValueError(f"handler key {key!r} already taken by {cls.registry[key].__name__}")
         cls.registry[key] = cls
 
 class JsonHandler(Handler, key="json"):
-    ...
+    """Handle JSON payloads."""
 
 class CsvHandler(Handler, key="csv"):
-    ...
+    """Handle CSV payloads."""
 
 # Handler.registry == {"json": JsonHandler, "csv": CsvHandler} — no metaclass required
 ```
+
+`key` is required, so *every* subclass must supply one — including intermediate base classes.
+Give the parameter a default (or `key: str | None = None` and skip registration when it is
+`None`) if you need abstract layers in the hierarchy. Rejecting a duplicate key is the fail-fast
+half: without it, a second `key="json"` silently replaces the first and the wrong handler wins.
 
 ## Common mistakes
 

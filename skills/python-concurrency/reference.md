@@ -11,7 +11,7 @@ project `CLAUDE.md` — specific exceptions, `logging` over `print`, no single-l
 | Mostly waiting on network/disk, and you control the code as `async` | `asyncio` | Highest concurrency per thread; needs async-aware libraries end to end. |
 | Waiting on blocking libraries you cannot make async | `ThreadPoolExecutor` | Threads release the GIL during I/O; simplest retrofit. |
 | Heavy computation | `ProcessPoolExecutor` | True parallelism; pays pickling + process-startup cost. |
-| Heavy computation, in-process isolation | `InterpreterPoolExecutor` (3.14+) | Subinterpreters — cheaper than processes, no pickling of args across the OS. |
+| Heavy computation, in-process isolation | `InterpreterPoolExecutor` (3.14+) | Subinterpreters — cheaper to start than processes; still serializes what crosses between them. |
 
 Rule of thumb: **threads and asyncio for waiting, processes for computing.** Don't mix
 models without a reason — one executor type per bottleneck keeps the failure modes small.
@@ -61,7 +61,7 @@ def render_all(pages: list[Page]) -> list[bytes]:
         return list(pool.map(render_page, pages))   # render_page must be importable, side-effect-free at import
 
 if __name__ == "__main__":          # required: the default start method re-imports this module
-    main()
+    render_all(load_pages())
 ```
 
 Start methods: `spawn` (Windows/macOS default) and `forkserver` (Linux default from 3.14)
@@ -110,7 +110,10 @@ the caveats" — not yet the portable default.
   slower single-threaded; not every C extension is compatible yet.
 
   ```python
-  if not sys._is_gil_enabled():        # only defined on free-threaded builds
+  # sys._is_gil_enabled() exists on every 3.13+ build — it returns True on a normal build
+  # and False on a free-threaded one. It is absent on 3.12 and older, so guard the lookup.
+  gil_enabled = sys._is_gil_enabled() if hasattr(sys, "_is_gil_enabled") else True
+  if not gil_enabled:
       logger.info("running without the GIL")
   ```
 
@@ -118,8 +121,10 @@ the caveats" — not yet the portable default.
   `sysconfig.get_config_var("Py_GIL_DISABLED")`.
 
 - **Subinterpreters (PEP 734).** Multiple isolated interpreters in one process, each with its
-  own GIL, exposed as `InterpreterPoolExecutor` in `concurrent.interpreters` (3.14+). Cheaper
-  than processes for CPU-bound isolation, with no cross-OS pickling of arguments.
+  own GIL. The low-level API is `concurrent.interpreters` (3.14+); the executor is
+  `concurrent.futures.InterpreterPoolExecutor`. Cheaper to start than processes for CPU-bound
+  isolation, but arguments and results still have to cross the interpreter boundary — only a
+  narrow set of types passes cheaply, and the rest is serialized like it would be for a process.
 
 Until these settle, processes remain the portable choice for CPU parallelism.
 

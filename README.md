@@ -56,6 +56,12 @@ From inside Claude Code, add the marketplace and install the plugin:
 The seven skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
 
+> **Coming from `python-dev`?** The plugin was renamed in 0.2.0, and the old identifier
+> `python-dev@python-dev` no longer resolves. Remove the old entry (via `/plugin`, or by
+> deleting it from `extraKnownMarketplaces`/`enabledPlugins` in `~/.claude/settings.json`),
+> then install `pylegible@pylegible` as above. The skill names are unchanged
+> (`python-patterns`, `python-testing`, …) — only the plugin and marketplace slug moved.
+
 <details>
 <summary>Install from source (local development)</summary>
 
@@ -81,6 +87,9 @@ Or register the clone as a local-directory marketplace by merging into `~/.claud
   }
 }
 ```
+
+Settings are read at startup, so restart Claude Code (or run `/plugin`) after editing the file
+for the skills to show up.
 
 </details>
 
