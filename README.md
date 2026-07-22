@@ -14,7 +14,7 @@ under the hood.
 
 ## What's inside
 
-- **Seven topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+- **Eight topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
   `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
   `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
 - **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
@@ -25,7 +25,8 @@ under the hood.
 
 | Skill | Use when you are… |
 |---|---|
-| **python-patterns** | writing or reviewing everyday Python — idioms, typing, error handling, comprehensions, packaging |
+| **python-idioms** | writing or reviewing everyday Python — idioms, typing, error handling, comprehensions, packaging |
+| **python-design-patterns** | naming or choosing a design pattern — Strategy, Adapter, Observer, Builder, and which GoF patterns Python dissolves |
 | **python-testing** | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
 | **python-logging** | adding logging, choosing a level, deciding stdout vs stderr, or replacing `print` |
 | **python-oop** | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
@@ -41,7 +42,7 @@ pylegible/
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
 ├── docs/how-it-works.md                               hooks vs skills vs CLAUDE.md
-└── skills/<name>/{SKILL.md, reference.md}             the seven skills
+└── skills/<name>/{SKILL.md, reference.md}             the eight skills
 ```
 
 ## Install — Claude Code
@@ -53,14 +54,19 @@ From inside Claude Code, add the marketplace and install the plugin:
 /plugin install pylegible@pylegible
 ```
 
-The seven skills then appear in the skill listing and auto-trigger by description. Manage or
+The eight skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
 
 > **Coming from `python-dev`?** The plugin was renamed in 0.2.0, and the old identifier
 > `python-dev@python-dev` no longer resolves. Remove the old entry (via `/plugin`, or by
 > deleting it from `extraKnownMarketplaces`/`enabledPlugins` in `~/.claude/settings.json`),
-> then install `pylegible@pylegible` as above. The skill names are unchanged
-> (`python-patterns`, `python-testing`, …) — only the plugin and marketplace slug moved.
+> then install `pylegible@pylegible` as above — only the plugin and marketplace slug moved.
+>
+> **Coming from 0.2.x?** `python-patterns` is now `python-idioms`. It always covered
+> everyday idioms rather than Gang-of-Four patterns, and the old name invited exactly that
+> confusion — which matters now that 0.3.0 adds a real `python-design-patterns` skill.
+> Nothing to do beyond updating the plugin, but if you referenced `python-patterns` by name
+> in your own `CLAUDE.md`, point it at `python-idioms`.
 
 <details>
 <summary>Install from source (local development)</summary>
