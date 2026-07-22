@@ -1,6 +1,6 @@
-# Python Patterns — reference catalog
+# Python Idioms — reference catalog
 
-Depth for `python-patterns`. Load when you need the details behind a rule. Every example
+Depth for `python-idioms`. Load when you need the details behind a rule. Every example
 here obeys the house conventions in the project `CLAUDE.md` (no single-letter names, no
 leading single underscore, ≤40-line bodies, Google-style docstrings).
 

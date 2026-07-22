@@ -95,6 +95,6 @@ This skill owns code that manipulates code: decorators, descriptors, metaclasses
 with `type()`. Operator and protocol dunders that make an object work with syntax (`__eq__`,
 `__iter__`, `__len__`, `__call__`, `__enter__`) → **python-data-model**. Ordinary class and
 interface design (dataclasses, Protocol/ABC, composition) → **python-oop**. General idioms and
-error handling → **python-patterns**. See `reference.md` for closures, parameterized and
+error handling → **python-idioms**. See `reference.md` for closures, parameterized and
 class-based decorators, descriptors, metaclasses vs `__init_subclass__`, dynamic attributes,
 and the *Fluent Python* chapters behind them.

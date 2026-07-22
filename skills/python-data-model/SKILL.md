@@ -77,7 +77,7 @@ class Vector2D:
 This skill owns the data model — the dunder methods that make an object work with Python's
 own syntax. Decorators, descriptors, metaclasses, and dynamic attributes →
 **python-metaprogramming**. Ordinary class design (dataclasses, Protocol vs ABC, composition)
-→ **python-oop**. General idioms and error handling → **python-patterns**. Choosing and
+→ **python-oop**. General idioms and error handling → **python-idioms**. Choosing and
 running a concurrency model (asyncio, threads, processes) → **python-concurrency**. See
 `reference.md` for the sequence protocol, slicing, rich comparison and hashing,
 `__bool__`/`__format__`/`__call__`, alternative constructors, `collections.abc`, structural

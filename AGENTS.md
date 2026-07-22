@@ -53,13 +53,14 @@ Principle of least surprise.
 
 ## Skills
 
-This project ships seven topic skills, each a `SKILL.md` (lean, loaded on demand) plus a
+This project ships eight topic skills, each a `SKILL.md` (lean, loaded on demand) plus a
 `reference.md` (depth). Scopes are non-overlapping — each `SKILL.md` ends with a **Boundary**
 line pointing at the right skill for adjacent topics.
 
 | Skill | Use when… |
 |---|---|
-| `python-patterns` | writing everyday Python — idioms, typing, errors, comprehensions, packaging |
+| `python-idioms` | writing everyday Python — idioms, typing, errors, comprehensions, packaging |
+| `python-design-patterns` | naming or choosing a design pattern — Strategy, Adapter, Observer, Builder, which GoF patterns Python dissolves |
 | `python-testing` | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
 | `python-logging` | adding logging, choosing a level, stdout vs stderr, replacing `print` |
 | `python-oop` | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |

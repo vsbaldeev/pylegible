@@ -4,7 +4,7 @@ description: >
   Use when adding logging to Python code, choosing a log level (debug/info/warning/
   error/critical), deciding what to send to stdout vs stderr, replacing print statements
   with the logging module, configuring loggers/handlers/formatters, or judging what is
-  safe to log. For exception handling itself use python-patterns.
+  safe to log. For exception handling itself use python-idioms.
 ---
 
 # Python Logging
@@ -80,6 +80,6 @@ def charge_order(order: Order, payments: PaymentClient) -> str:
 
 This skill owns logging: levels, what/where to log, configuration — including routing logs
 out of threads and worker processes with `QueueHandler`/`QueueListener`. How to *catch and
-raise* exceptions → **python-patterns**. Choosing and running the pool those workers live in
+raise* exceptions → **python-idioms**. Choosing and running the pool those workers live in
 (threads vs asyncio vs processes) → **python-concurrency**. See `reference.md` for handlers,
 formatters, structured logging, logging from multiple processes, and application setup.

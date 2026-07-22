@@ -13,7 +13,7 @@ cleverness conflict, choose clarity.
 ## Design principles
 
 Apply these when writing or reviewing any code. Depth and examples live in the
-`python-oop` and `python-patterns` skills.
+`python-oop`, `python-design-patterns`, and `python-idioms` skills.
 
 **SOLID**
 - **Single Responsibility** — one reason to change per class or module.

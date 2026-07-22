@@ -265,4 +265,4 @@ concurrency model (asyncio event loop, `TaskGroup`, threads vs processes) see
 
 `__enter__`/`__exit__` make an object usable with `with`. Return `False` from `__exit__`
 to let exceptions propagate. For simple cases prefer `@contextmanager` (see
-python-patterns) over writing the class.
+python-idioms) over writing the class.

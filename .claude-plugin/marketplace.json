@@ -7,8 +7,8 @@
   "plugins": [
     {
       "name": "pylegible",
-      "description": "Opinionated Python development skills: idiomatic patterns, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming.",
-      "version": "0.2.0",
+      "description": "Opinionated Python development skills: idiomatic style, design patterns, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming.",
+      "version": "0.3.0",
       "source": "./"
     }
   ]
