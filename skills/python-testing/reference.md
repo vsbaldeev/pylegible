@@ -137,9 +137,14 @@ markers = [
 ```
 tests/
   conftest.py          # shared fixtures
-  unit/                # fast, isolated
-  integration/         # touches DB, filesystem, network doubles
+  unit/                # fast, isolated — one module each, collaborators faked
+  integration/         # one adapter against its real DB, filesystem, or network double
+  e2e/                 # spans modules; drives the whole app
 ```
+
+Which directory a file goes in follows from how many source modules it covers: one module
+mirrors the source path, several is named for the behavior instead. Full rules — including
+when to mirror at all — → **python-project-structure**.
 
 Group related tests in a `Test<Subject>` class when they share a fixture; keep the class
 thin — no logic beyond arranging and asserting.
