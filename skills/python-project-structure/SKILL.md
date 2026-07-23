@@ -4,8 +4,8 @@ description: >
   Use when deciding where Python code should live — splitting a module that has grown too
   large, creating or naming a subpackage, organizing a package into layers, deciding what
   belongs in `__init__.py`, fixing a directory that has accumulated too many modules,
-  untangling circular imports between siblings, or laying out `tests/` to match the source
-  tree. For class design use python-oop; for named design patterns and how objects
+  untangling circular imports between siblings, or laying out `tests/` relative to the
+  source tree. For class design use python-oop; for named design patterns and how objects
   collaborate use python-design-patterns; for statement-level idiom, typing, and import
   ordering use python-idioms; for test style, fixtures, and pytest configuration use
   python-testing.
@@ -44,7 +44,7 @@ If yes, it belongs here. If it depends on what the code says, it belongs to a si
 | Dependency rule | Imports point inward: `adapters → application → domain`. Never the reverse. |
 | Composition root | One `bootstrap.py` wires concrete adapters into use cases. Nowhere else does. |
 | Naming | Name a module for what it holds. Never `utils`, `helpers`, `common`, `misc`, `shared`, `manager`. |
-| Tests | `tests/unit/` and `tests/integration/` each mirror the source tree. |
+| Tests | Mirror the source tree when a test covers one module (`unit/`, and adapter tests). Name for behavior when it spans modules (`e2e/`). Flat `tests/` is fine until stage 3. |
 
 Borderline against a threshold? The naming test decides: **can you name the directory
 without using "and" or a filler word?** If not, it holds more than one concern.
@@ -69,9 +69,14 @@ src/orders/
   __init__.py       the public surface: __all__, ≤10 names
   domain/           pure logic — stdlib only. No SQL, HTTP, env, or framework imports.
   application/      use cases; imports domain; declares the Protocols (ports) it needs
-  adapters/         postgres_repo.py, http_api.py, cli.py — the only place I/O appears
+  adapters/         postgres_repo.py, stripe_gateway.py — your code calling out
+  entrypoints/      http_api.py, cli.py — the world calling in; the only place a framework appears
   bootstrap.py      composition root: wires concrete adapters into use cases
 ```
+
+Split `entrypoints/` from `adapters/` once you have both. Every module in `adapters/`
+implements a Protocol from `application/ports.py`; nothing in `entrypoints/` does. One
+directory of each is fine while a service has only a CLI and one datastore.
 
 ## Example
 
@@ -94,26 +99,40 @@ class PostgresOrderRepository:
         """Persist an order. See OrderRepository."""
 ```
 
-Tests mirror the tree inside each kind, which self-checks the layering:
+A test mirrors the source tree when it covers exactly one module, and is named for the
+behavior when it spans several:
 
 ```
-src/orders/domain/pricing.py         → tests/unit/orders/domain/test_pricing.py
-src/orders/adapters/postgres_repo.py → tests/integration/orders/adapters/test_postgres_repo.py
+tests/
+  unit/                                  mirrors src/ — one module each, collaborators faked
+    orders/domain/test_pricing.py
+    orders/application/test_place_order.py
+  integration/                           one adapter against its real system
+    orders/adapters/test_postgres_repo.py
+  e2e/                                   spans modules — named for behavior, mirrors nothing
+    test_place_order.py
+    test_refund_order.py
 ```
 
-A `domain/` directory appearing under `tests/integration/` proves your domain does I/O.
+`tests/unit/` should contain nothing but `domain/` and `application/`. A domain module whose
+test needs a real system is a domain module doing I/O.
 
 ## Common mistakes
 
-- Starting at stage 3 for a 200-line tool — three near-empty directories are their own
+- Starting at stage 3 for a 200-line tool — four near-empty directories are their own
   readability problem. Earn each stage.
 - A `utils.py` that becomes wherever anything unclassifiable lands.
 - Re-exporting through every interior `__init__.py`: it invites import cycles and hides
   where a name actually lives.
 - `domain/` importing from `adapters/` "just this once" — without a single composition root
   the dependency rule dies silently.
+- An entrypoint reaching past the use case to call an adapter directly. Forbid it
+  mechanically; it is the shortcut everyone takes under deadline.
 - Splitting by technical layer parts that always change together.
-- A flat `tests/` beside a nested `src/`, so finding a file's test means grepping.
+- Forcing a mirror onto a test that spans modules. If there is no single source file, there
+  is nothing to mirror — name it for the behavior and put it in `e2e/`.
+- Keeping `tests/` flat past stage 3, until hierarchy has to be smuggled into filenames
+  (`test_downloader_handler_twisted_http11.py`).
 
 ## Boundary
 
