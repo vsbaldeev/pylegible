@@ -14,7 +14,7 @@ under the hood.
 
 ## What's inside
 
-- **Eight topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+- **Nine topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
   `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
   `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
 - **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
@@ -27,6 +27,7 @@ under the hood.
 |---|---|
 | **python-idioms** | writing or reviewing everyday Python — idioms, typing, error handling, comprehensions, packaging |
 | **python-design-patterns** | naming or choosing a design pattern — Strategy, Adapter, Observer, Builder, and which GoF patterns Python dissolves |
+| **python-project-structure** | deciding where code lives — splitting modules, naming subpackages, layering, import direction, mirroring `tests/` |
 | **python-testing** | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
 | **python-logging** | adding logging, choosing a level, deciding stdout vs stderr, or replacing `print` |
 | **python-oop** | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
@@ -42,7 +43,7 @@ pylegible/
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
 ├── docs/how-it-works.md                               hooks vs skills vs CLAUDE.md
-└── skills/<name>/{SKILL.md, reference.md}             the eight skills
+└── skills/<name>/{SKILL.md, reference.md}             the nine skills
 ```
 
 ## Install — Claude Code
@@ -54,7 +55,7 @@ From inside Claude Code, add the marketplace and install the plugin:
 /plugin install pylegible@pylegible
 ```
 
-The eight skills then appear in the skill listing and auto-trigger by description. Manage or
+The nine skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
 
 > **Coming from `python-dev`?** The plugin was renamed in 0.2.0, and the old identifier
