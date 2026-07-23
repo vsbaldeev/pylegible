@@ -185,19 +185,14 @@ def read_lines(path: Path) -> Iterator[str]:
             yield line.strip()
 ```
 
-## Imports and packaging
+## Imports
 
 Order: standard library, third-party, local — each group separated by a blank line, sorted
-(isort/ruff enforce it). Avoid `from module import *`. Prefer a `src/` layout:
+(isort/ruff enforce it). Avoid `from module import *` — import the module, or the specific
+names you use, so a reader can trace where each name came from.
 
-```
-project/
-  src/mypackage/__init__.py
-  tests/
-  pyproject.toml
-```
-
-Export the public surface explicitly in `__init__.py` with `__all__`.
+Where modules and packages live, what a package exports through `__init__.py`, and which way
+imports may flow between them → **python-project-structure**.
 
 ## Anti-patterns
 
