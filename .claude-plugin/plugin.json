@@ -1,7 +1,7 @@
 {
   "name": "pylegible",
-  "version": "0.3.0",
-  "description": "Opinionated Python development skills: idiomatic style, design patterns, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming. Optimized for code that is easy for humans to read.",
+  "version": "0.4.0",
+  "description": "Opinionated Python development skills: idiomatic style, design patterns, project structure, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming. Optimized for code that is easy for humans to read.",
   "author": {
     "name": "vsbaldeev"
   },
@@ -12,6 +12,8 @@
     "python",
     "idioms",
     "design-patterns",
+    "project-structure",
+    "architecture",
     "pytest",
     "testing",
     "logging",

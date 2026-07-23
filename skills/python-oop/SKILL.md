@@ -6,7 +6,8 @@ description: >
   choosing composition over inheritance, applying SOLID pragmatically, or encapsulating
   state. For named design patterns and how several objects collaborate use
   python-design-patterns; for dunder methods and custom iteration use python-data-model; for
-  descriptors, decorators, and metaclasses use python-metaprogramming.
+  descriptors, decorators, and metaclasses use python-metaprogramming; for which module or
+  package a class belongs in, and which way imports may flow, use python-project-structure.
 ---
 
 # Python OOP
@@ -75,6 +76,8 @@ This skill owns the design of *one* class or type. How *several* objects collabo
 any named design pattern (Strategy, Adapter, Observer, Builder) → **python-design-patterns**.
 Special methods (`__eq__`, `__iter__`, `__hash__`) and custom sequences →
 **python-data-model**. Descriptors, decorators, and metaclasses →
-**python-metaprogramming**. General idioms and error handling → **python-idioms**. See `reference.md` for dataclasses, Protocol vs ABC,
+**python-metaprogramming**. General idioms and error handling → **python-idioms**. Which
+module or package a type belongs in, and the layering that keeps domain types free of I/O →
+**python-project-structure**. See `reference.md` for dataclasses, Protocol vs ABC,
 SOLID applied to Python, the Law of Demeter, and `__slots__`. The project `CLAUDE.md`
 lists the full design-principle set.
