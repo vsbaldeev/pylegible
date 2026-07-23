@@ -62,7 +62,7 @@ line pointing at the right skill for adjacent topics.
 | `python-idioms` | writing everyday Python — idioms, typing, errors, comprehensions, packaging |
 | `python-design-patterns` | naming or choosing a design pattern — Strategy, Adapter, Observer, Builder, which GoF patterns Python dissolves |
 | `python-project-structure` | deciding where code lives — splitting modules, naming subpackages, layering, import direction, mirroring `tests/` |
-| `python-testing` | writing pytest tests or doing TDD — fixtures, parametrization, mocking, coverage |
+| `python-testing` | writing pytest tests or doing outside-in TDD — fixtures, parametrization, mocking, fault injection, reading coverage |
 | `python-logging` | adding logging, choosing a level, stdout vs stderr, replacing `print` |
 | `python-oop` | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
 | `python-data-model` | dunder methods, operators, custom sequences/iterators, `with`, pattern matching |
