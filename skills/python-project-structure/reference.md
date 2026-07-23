@@ -59,23 +59,48 @@ src/orders/
   adapters/
     postgres_repo.py    implements OrderRepository
     stripe_gateway.py   implements PaymentGateway
+  entrypoints/
     http_api.py         the web surface
+    cli.py              the command line
   bootstrap.py          composition root
 ```
 
+*Architecture Patterns with Python* calls the middle layer `service_layer` rather than
+`application`. Same idea, different word — if you are coming from that book, read them as
+synonyms.
+
 ### The dependency rule
 
-**Imports point inward only:** `adapters → application → domain`.
+**Imports point inward only:** `entrypoints`/`adapters` → `application` → `domain`.
 
 - `domain` imports the standard library and other `domain` modules. Nothing else. No SQL, no
   HTTP client, no `os.environ`, no framework import. This is what makes the rules testable
   in microseconds without a fixture.
 - `application` imports `domain` and declares the interfaces it needs. It never imports a
   concrete adapter.
-- `adapters` imports `application` and `domain` freely. It is the only place I/O appears.
+- `adapters` and `entrypoints` import `application` and `domain` freely, and never each
+  other. Together they are the only place I/O appears.
 
 Everything else follows from this one rule, which is why it is worth enforcing mechanically
 (see below) rather than by review alone.
+
+### Inbound and outbound are different
+
+`adapters` and `entrypoints` sit at the same level but face opposite directions:
+
+- **`adapters` — your code calls out.** Every module implements a Protocol from
+  `application/ports.py`. Substitutable by construction; the fake in your unit tests proves
+  it.
+- **`entrypoints` — the world calls in.** Nothing declares a Protocol for these and nobody
+  injects them. They are the outermost shell, and the only place a web framework or CLI
+  library may be imported.
+
+Keeping them apart buys three things: the "every adapter implements a port" rule becomes
+checkable by location, "frameworks live only in `entrypoints`" becomes a rule you can state
+at all, and `main.py` gets an obvious home.
+
+Split them once you have both. A service with one CLI and one datastore is fine with
+`adapters/` alone.
 
 ### Ports live with their consumer
 
@@ -258,10 +283,19 @@ holds one base class or one core type, not as a grab-bag.
 The directory naming test: **can you name it without "and" or a filler word?** A directory
 you want to call `parsing_and_validation` is two directories.
 
-## Mirroring tests
+## Laying out tests
 
-`python-testing` owns the `unit/` + `integration/` split. This skill adds one rule: the
-source tree mirrors inside each.
+`python-testing` owns how a test is written. This skill answers where the file goes, and the
+question that decides it is **how many source modules does this test cover?**
+
+| Coverage | Can it mirror? | Named for |
+|---|---|---|
+| One module, collaborators faked | Yes | the module |
+| One adapter, real external system | Yes | the adapter |
+| Several modules, or the whole app | No — nothing to mirror | the behavior |
+
+The first two mirror because a 1:1 mapping exists. The third cannot: there is no single path
+to transform.
 
 ```
 src/orders/
@@ -269,20 +303,53 @@ src/orders/
   domain/order.py
   application/place_order.py
   adapters/postgres_repo.py
+  entrypoints/http_api.py
 
 tests/
   conftest.py
-  unit/orders/domain/test_pricing.py
-  unit/orders/domain/test_order.py
-  unit/orders/application/test_place_order.py
-  integration/orders/adapters/test_postgres_repo.py
+  unit/                                       mirrors src/
+    orders/domain/test_pricing.py
+    orders/domain/test_order.py
+    orders/application/test_place_order.py
+  integration/                                mirrors src/…/adapters/
+    orders/adapters/test_postgres_repo.py
+  e2e/                                        named for behavior
+    test_place_order.py
+    test_refund_order.py
 ```
 
-Two properties fall out for free:
+Two properties fall out:
 
-1. Finding a file's test is a path transformation, not a search.
-2. **A `domain/` directory under `tests/integration/` proves your domain does I/O.** The
-   test tree audits the source tree.
+1. For a test that covers one module, finding it is a path transformation, not a search.
+2. **`tests/unit/` should contain nothing but `domain/` and `application/`.** A domain module
+   whose test needs a real system is a domain module doing I/O. The test tree audits the
+   source tree.
+
+### Mirror at stage 3, not before
+
+Mirroring a four-module package is ceremony. Flat `tests/` with files named for the concept
+is right at stages 1–2, and it is what most libraries do — requests, flask, and pydantic all
+ship a flat `tests/`.
+
+It has a documented failure threshold, though, at roughly 50 files. pydantic runs 76 test
+files in one directory; scrapy runs 146, and scrapy shows the tell — hierarchy smuggled into
+filenames, as in `test_downloader_handler_twisted_http11.py`. When a directory cannot nest,
+names grow to compensate. That is the same ≤7-entries logic this skill applies to source
+directories, arriving late.
+
+At the other end of the scale the payoff is unambiguous. Sentry writes the rule down for its
+contributors — *"Code location: `src/sentry/foo/bar.py`, Test location:
+`tests/sentry/foo/test_bar.py`"* — and its `tests/sentry/` runs to 119 mirrored
+subdirectories. Its tests that span modules live in separate unmirrored trees beside it
+(`acceptance/`, `integration/`, `snuba/`), which is the same split described above under
+different names.
+
+### Naming the files that cannot mirror
+
+Name them for the behavior a user would recognize — `test_place_order.py`,
+`test_refund_order.py` — or for the collaborator under test where the behavior is
+infrastructural, as *Architecture Patterns with Python* does with `test_uow.py` and
+`test_repository.py`. Never invent a source module to mirror just to satisfy the rule.
 
 ## Enforcing the dependency rule
 
@@ -296,7 +363,11 @@ root_package = "orders"
 [[tool.importlinter.contracts]]
 name = "Imports point inward"
 type = "layers"
-layers = ["orders.adapters", "orders.application", "orders.domain"]
+layers = [
+    "orders.entrypoints | orders.adapters",
+    "orders.application",
+    "orders.domain",
+]
 ```
 
 Run it in CI:
@@ -305,10 +376,17 @@ Run it in CI:
 lint-imports
 ```
 
-Higher layers may import lower ones; the reverse fails the build. Modules outside the listed
-layers are unconstrained, which is exactly why `bootstrap.py` lives at the package root — it
-must import adapters, and sitting outside the contract keeps it legal without weakening the
-rule for anything else.
+Higher layers may import lower ones; the reverse fails the build.
+
+The `|` puts `entrypoints` and `adapters` at the same level *and* forbids them importing each
+other, so an HTTP handler cannot reach past the use case to call `PostgresOrderRepository`
+directly. That is the shortcut everyone takes under deadline, and it now fails CI instead of
+passing review. (Use `:` instead of `|` for siblings that are allowed to depend on each
+other; the separators cannot be mixed on one line.)
+
+Modules outside the listed layers are unconstrained, which is exactly why `bootstrap.py`
+lives at the package root — it must import adapters, and sitting outside the contract keeps
+it legal without weakening the rule for anything else.
 
 ## Migrating stage 2 → stage 3
 
@@ -320,12 +398,13 @@ src/orders/
   models.py  pricing.py  storage.py  taxes.py  utils.py
 ```
 
-1. **Sort every module into one of three buckets** by asking what it touches. Touches
-   nothing external → `domain`. Orchestrates a user-visible operation → `application`.
-   Speaks SQL, HTTP, SMTP, or the filesystem → `adapters`.
+1. **Sort every module into a bucket** by asking what it touches and which way calls flow.
+   Touches nothing external → `domain`. Orchestrates a user-visible operation →
+   `application`. Your code calling out to SQL, HTTP, SMTP, or the filesystem → `adapters`.
+   The world calling in → `entrypoints`.
 
    `models.py`, `pricing.py`, `discounts.py`, `taxes.py` → domain.
-   `billing.py` → application. `api.py`, `storage.py`, `emails.py` → adapters.
+   `billing.py` → application. `storage.py`, `emails.py` → adapters. `api.py` → entrypoints.
 
 2. **Empty `utils.py` first.** Move each function to the module that actually uses it; if
    two modules use it and it touches nothing, it is a domain function. Delete the file. Do
@@ -334,9 +413,10 @@ src/orders/
 3. **Create the directories and move files**, preserving history:
 
    ```bash
-   mkdir -p src/orders/domain src/orders/application src/orders/adapters
+   mkdir -p src/orders/domain src/orders/application src/orders/adapters src/orders/entrypoints
    git mv src/orders/pricing.py src/orders/domain/pricing.py
    git mv src/orders/storage.py src/orders/adapters/postgres_repo.py
+   git mv src/orders/api.py src/orders/entrypoints/http_api.py
    ```
 
 4. **Fix the direction, not the symptom.** Every remaining `domain → adapters` import is a
@@ -346,9 +426,10 @@ src/orders/
 
 5. **Add the `import-linter` contract** and let CI hold the line from here.
 
-6. **Mirror the move in `tests/`** with the same `git mv` operations, then run the suite.
-   Tests that now need a database fixture and sit under `tests/unit/` are telling you a
-   file landed in the wrong layer.
+6. **Reorganize `tests/` to match**, then run the suite. Tests covering one module move
+   under `tests/unit/` on the mirrored path; tests that span modules move to `tests/e2e/`
+   and get named for the behavior. Tests that now need a database fixture and sit under
+   `tests/unit/` are telling you a file landed in the wrong layer.
 
 ## Anti-patterns
 
@@ -360,6 +441,8 @@ src/orders/
 | `domain/` importing `adapters/` | Declare a Protocol in `application`, inject it, wire in `bootstrap.py` |
 | Circular import fixed by importing inside a function | Fix the direction — the cycle is the message |
 | Layering a 200-line tool | Stay at stage 1 or 2 until a promotion trigger actually fires |
-| Flat `tests/` beside a nested `src/` | Mirror the source tree inside `unit/` and `integration/` |
+| Flat `tests/` kept past stage 3 | Mirror in `unit/`; watch for hierarchy leaking into filenames |
+| Forcing a mirror onto a test that spans modules | Name it for the behavior, put it in `e2e/` |
+| An entrypoint calling an adapter directly | Route through the use case; enforce with `\|` in the layers contract |
 | A package exporting 30 names | It is two packages, or a namespace pretending to be a module |
 | Splitting files that always change together | Files that change together live together |
