@@ -4,11 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 
-An opinionated, installable plugin that encodes a house style for writing Python. Its
-overriding value: **code that is easy for a human to read, not merely correct.**
+An opinionated, installable plugin for AI coding agents — **Claude Code** (as a plugin) and
+**Codex** (as Agent Skills + `AGENTS.md`) — that encodes a house style for writing Python.
+Its overriding value: **code that is easy for a human to read, not merely correct.**
 
-It works with **Claude Code** (as a plugin) and **Codex** (as Agent Skills + `AGENTS.md`),
-and it doubles as a teaching artifact — see [`docs/how-it-works.md`](docs/how-it-works.md)
+It also doubles as a teaching artifact — see [`docs/how-it-works.md`](docs/how-it-works.md)
 for a from-scratch explanation of how hooks, skills, and `CLAUDE.md`/`AGENTS.md` differ
 under the hood.
 
@@ -58,16 +58,21 @@ From inside Claude Code, add the marketplace and install the plugin:
 The nine skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
 
-> **Coming from `python-dev`?** The plugin was renamed in 0.2.0, and the old identifier
-> `python-dev@python-dev` no longer resolves. Remove the old entry (via `/plugin`, or by
-> deleting it from `extraKnownMarketplaces`/`enabledPlugins` in `~/.claude/settings.json`),
-> then install `pylegible@pylegible` as above — only the plugin and marketplace slug moved.
->
-> **Coming from 0.2.x?** `python-patterns` is now `python-idioms`. It always covered
-> everyday idioms rather than Gang-of-Four patterns, and the old name invited exactly that
-> confusion — which matters now that 0.3.0 adds a real `python-design-patterns` skill.
-> Nothing to do beyond updating the plugin, but if you referenced `python-patterns` by name
-> in your own `CLAUDE.md`, point it at `python-idioms`.
+<details>
+<summary>Upgrading from <code>python-dev</code> or 0.2.x?</summary>
+
+**Coming from `python-dev`?** The plugin was renamed in 0.2.0, and the old identifier
+`python-dev@python-dev` no longer resolves. Remove the old entry (via `/plugin`, or by
+deleting it from `extraKnownMarketplaces`/`enabledPlugins` in `~/.claude/settings.json`),
+then install `pylegible@pylegible` as above — only the plugin and marketplace slug moved.
+
+**Coming from 0.2.x?** `python-patterns` is now `python-idioms`. It always covered
+everyday idioms rather than Gang-of-Four patterns, and the old name invited exactly that
+confusion — which matters now that 0.3.0 adds a real `python-design-patterns` skill.
+Nothing to do beyond updating the plugin, but if you referenced `python-patterns` by name
+in your own `CLAUDE.md`, point it at `python-idioms`.
+
+</details>
 
 <details>
 <summary>Install from source (local development)</summary>
