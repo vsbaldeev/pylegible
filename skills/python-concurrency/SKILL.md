@@ -89,6 +89,7 @@ def fetch_all(urls: list[str], client: HttpClient) -> dict[str, bytes]:
 This skill owns choosing and using a concurrency model — threads, asyncio, processes,
 executors, and the GIL. Writing async **protocol** methods (`__aiter__`, `__anext__`,
 `__aenter__`, `__aexit__`) → **python-data-model**. Testing async or concurrent code
-(`pytest.mark.asyncio`, `AsyncMock`) → **python-testing**. Exception handling and general
+(`pytest.mark.asyncio`, `AsyncMock`), including forcing a specific interleaving to pin a
+race deterministically → **python-testing**. Exception handling and general
 idioms → **python-idioms**. See `reference.md` for threads/processes/asyncio depth,
 shared-state discipline, and the free-threading (PEP 779) & subinterpreters (PEP 734) sidebar.
