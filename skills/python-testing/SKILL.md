@@ -101,6 +101,8 @@ how `tests/` mirrors the source tree → **python-project-structure**. The style
 *under test* → **python-idioms**;
 class design → **python-oop**; logging assertions aside, logging design → **python-logging**.
 Writing concurrent code → **python-concurrency**; forcing a specific interleaving in a test
-is this skill's, in `reference.md`. See `reference.md` for fixtures/scopes, mocking, async
+is this skill's, in `reference.md`. Deciding *when* to pin existing behavior before changing
+it, and how far a change may spread → **python-editing-existing-code**; this skill owns *how*
+to write that characterization test. See `reference.md` for fixtures/scopes, mocking, async
 tests, markers, configuration, which pytest plugins earn their place, and reproducing
 unreproducible conditions.
