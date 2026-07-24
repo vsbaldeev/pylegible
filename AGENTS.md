@@ -15,30 +15,53 @@ conflict, choose clarity.
 
 - Never use single-letter variable names. Use names that convey meaning (`index` not `i`,
   `error` not `e`, `left`/`right` not `a`/`b`). Rare exception: `x`/`y` for mathematical
-  vector or coordinate components.
+  vector or coordinate components, where the letter *is* the meaning.
+  *Why:* a name is the cheapest documentation there is; a single letter makes the reader
+  reconstruct what it holds (*Clean Code* — "use intention-revealing names").
 - Names must not start with a single underscore. Use no prefix for regular members, or a
   double underscore (`__name`) only for truly private class members.
+  *Why (a deliberate divergence from PEP 8):* PEP 8 uses a single leading underscore as a
+  weak, unenforced "internal use" hint. We reject that ambiguity — reserve `__name`, whose
+  mangling actually makes access bite, for when privacy must be real, and use no prefix
+  otherwise. A minority position, stated plainly so a reader can disagree knowingly.
 - Module-level names never start with an underscore. Module-level constants use `UPPER_CASE`.
+  *Why:* a leading underscore is Python's "not part of the public API" marker (skipped by
+  `import *`); we keep module surfaces intentional rather than lean on it. `UPPER_CASE`
+  constants follow PEP 8.
 
 ## Functions
 
 - Keep each function body to 40 lines or fewer (count code and blank lines; not decorators,
   the signature, docstring lines, or comment-only lines). Extract well-named helpers past that.
+  *Why:* past roughly a screenful a function usually does more than one thing and stops
+  fitting in the reader's head (*Clean Code*, and *Refactoring*'s Extract Function — both
+  argue for smaller still; 40 is a pragmatic ceiling).
 
 ## Docstrings and types
 
 - Every top-level function and every class method gets a Google-style docstring (exclude
   nested functions, test functions, and lambdas).
+  *Why:* a documented interface can be used without reading its body; Google style is compact
+  and widely tooled (Sphinx/Napoleon) — see the Google Python Style Guide.
 - Annotate signatures. Prefer built-in generics (`list[str]`, `dict[str, int]`).
+  *Why:* annotations are checkable documentation of the contract; built-in generics (PEP 585,
+  3.9+) retired `typing.List` and read more directly.
 
 ## Errors and logging
 
 - Catch specific exceptions, never bare `except`. Chain with `raise ... from error`.
+  *Why:* a bare `except` also swallows `KeyboardInterrupt`/`SystemExit` and hides real bugs
+  (PEP 8, "Programming Recommendations"); `from` preserves the causal chain (PEP 3134).
 - Use the `logging` module for diagnostics, never `print`. Never log secrets or PII.
+  *Why:* `logging` has levels, routing, and an off switch; `print` has none and pollutes
+  stdout where it can corrupt piped output (Python Logging HOWTO). Logged secrets/PII leak.
 
 ## Design principles
 
-Apply when writing or reviewing any code. Depth and examples live in the skills below.
+Apply when writing or reviewing any code. Depth and examples live in the skills below. These
+are the field's established names, not house inventions — SOLID from Robert C. Martin; DRY and
+YAGNI from *The Pragmatic Programmer*; KISS and least-surprise from the Unix tradition. We
+adopt them; we don't claim them.
 
 **SOLID** — Single Responsibility (one reason to change); Open/Closed (extend by adding
 code); Liskov Substitution (subtypes usable in place of their base); Interface Segregation
