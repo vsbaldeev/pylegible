@@ -141,7 +141,9 @@ the shape of `tests/`. What goes *inside* a file belongs elsewhere: class, datac
 Protocol design → **python-oop**; named patterns and object collaboration →
 **python-design-patterns**; statement-level idiom, typing, error handling, and import
 *ordering* → **python-idioms**; test style, fixtures, and pytest configuration →
-**python-testing**. See `reference.md` for the stages in full, ports and composition roots,
+**python-testing**. *When* a split is worth doing while editing existing code, versus
+noting it and leaving it — restraint against the drive-by refactor → **python-editing-existing-code**.
+See `reference.md` for the stages in full, ports and composition roots,
 `__init__.py` policy, a worked stage-2 → stage-3 migration, and an `import-linter` config
 that makes the dependency rule CI-checkable. The project `CLAUDE.md` lists the full
 design-principle set.
