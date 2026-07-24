@@ -8,13 +8,9 @@ An opinionated, installable plugin for AI coding agents — **Claude Code** (as 
 **Codex** (as Agent Skills + `AGENTS.md`) — that encodes a house style for writing Python.
 Its overriding value: **code that is easy for a human to read, not merely correct.**
 
-It also doubles as a teaching artifact — see [`docs/how-it-works.md`](docs/how-it-works.md)
-for a from-scratch explanation of how hooks, skills, and `CLAUDE.md`/`AGENTS.md` differ
-under the hood.
-
 ## What's inside
 
-- **Nine topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+- **Ten topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
   `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
   `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
 - **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
@@ -29,6 +25,7 @@ under the hood.
 | **python-design-patterns** | naming or choosing a design pattern — Strategy, Adapter, Observer, Builder, and which GoF patterns Python dissolves |
 | **python-project-structure** | deciding where code lives — splitting modules, naming subpackages, layering, import direction, mirroring `tests/` |
 | **python-testing** | writing pytest tests or doing outside-in TDD — fixtures, parametrization, mocking, fault injection, reading coverage |
+| **python-editing-existing-code** | changing code you didn't write — minimal-footprint edits and characterization tests before touching untested behavior |
 | **python-logging** | adding logging, choosing a level, deciding stdout vs stderr, or replacing `print` |
 | **python-oop** | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
 | **python-data-model** | dunder methods, operators, custom sequences/iterators, `with`, pattern matching |
@@ -42,8 +39,7 @@ pylegible/
 ├── .claude-plugin/{plugin.json, marketplace.json}   Claude Code plugin manifest
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
-├── docs/how-it-works.md                               hooks vs skills vs CLAUDE.md
-└── skills/<name>/{SKILL.md, reference.md}             the nine skills
+└── skills/<name>/{SKILL.md, reference.md}             the ten skills
 ```
 
 ## Install — Claude Code
@@ -55,24 +51,8 @@ From inside Claude Code, add the marketplace and install the plugin:
 /plugin install pylegible@pylegible
 ```
 
-The nine skills then appear in the skill listing and auto-trigger by description. Manage or
+The ten skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
-
-<details>
-<summary>Upgrading from <code>python-dev</code> or 0.2.x?</summary>
-
-**Coming from `python-dev`?** The plugin was renamed in 0.2.0, and the old identifier
-`python-dev@python-dev` no longer resolves. Remove the old entry (via `/plugin`, or by
-deleting it from `extraKnownMarketplaces`/`enabledPlugins` in `~/.claude/settings.json`),
-then install `pylegible@pylegible` as above — only the plugin and marketplace slug moved.
-
-**Coming from 0.2.x?** `python-patterns` is now `python-idioms`. It always covered
-everyday idioms rather than Gang-of-Four patterns, and the old name invited exactly that
-confusion — which matters now that 0.3.0 adds a real `python-design-patterns` skill.
-Nothing to do beyond updating the plugin, but if you referenced `python-patterns` by name
-in your own `CLAUDE.md`, point it at `python-idioms`.
-
-</details>
 
 <details>
 <summary>Install from source (local development)</summary>
