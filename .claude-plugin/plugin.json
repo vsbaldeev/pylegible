@@ -1,6 +1,6 @@
 {
   "name": "pylegible",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Opinionated Python development skills: idiomatic style, design patterns, project structure, pytest testing, logging discipline, OOP design, the data model, concurrency, and metaprogramming. Optimized for code that is easy for humans to read.",
   "author": {
     "name": "vsbaldeev"
