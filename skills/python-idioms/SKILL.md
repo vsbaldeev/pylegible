@@ -34,6 +34,7 @@ skill is the house style for everyday Python; the deep catalog is in `reference.
 |---|---|
 | Names | Descriptive; never single-letter, never leading single underscore. `__name` only for truly private members. |
 | Functions | ≤40 body lines; extract well-named helpers past that. |
+| Line length | ≤120 characters. Wrap with parens, not `\`; extract a variable before splitting an expression mid-call. |
 | Errors | Catch specific exceptions; chain with `raise ... from error`; never bare `except`. |
 | Style | EAFP (try/except) over LBYL (pre-checks). Explicit over implicit. |
 | Comprehensions | Only for simple map/filter. If it needs two conditions or a nested loop, write the loop. |
