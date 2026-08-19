@@ -1,8 +1,8 @@
 # Python Concurrency — Reference
 
 The catalog behind `SKILL.md`: how each model works, how to keep shared state safe, and
-where the language is heading (free threading, subinterpreters). All examples obey the
-project `CLAUDE.md` — specific exceptions, `logging` over `print`, no single-letter names.
+where the language is heading (free threading, subinterpreters). All examples follow house
+convention: catch specific exceptions, `logging` over `print`, no single-letter names.
 
 ## Choosing a model
 

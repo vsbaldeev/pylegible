@@ -75,4 +75,5 @@ Decorators, descriptors, and metaclasses â†’ **python-metaprogramming**. Tests â
 See `reference.md` for the full catalog (typing, context managers, generators, imports,
 anti-patterns) and the
 design principles that live here: fail fast, separation of concerns, KISS/YAGNI/least
-surprise. The project `CLAUDE.md` lists the full principle set (SOLID and general).
+surprise. Full principle set: SOLID, composition over inheritance, Law of Demeter, DRY,
+YAGNI, KISS, fail fast, separation of concerns, least surprise.

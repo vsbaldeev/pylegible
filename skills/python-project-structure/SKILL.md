@@ -145,5 +145,6 @@ Protocol design → **python-oop**; named patterns and object collaboration →
 noting it and leaving it — restraint against the drive-by refactor → **python-editing-existing-code**.
 See `reference.md` for the stages in full, ports and composition roots,
 `__init__.py` policy, a worked stage-2 → stage-3 migration, and an `import-linter` config
-that makes the dependency rule CI-checkable. The project `CLAUDE.md` lists the full
-design-principle set.
+that makes the dependency rule CI-checkable. Full principle set: SOLID, composition over
+inheritance, Law of Demeter, DRY, YAGNI, KISS, fail fast, separation of concerns, least
+surprise.

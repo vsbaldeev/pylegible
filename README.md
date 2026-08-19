@@ -90,8 +90,22 @@ for the skills to show up.
 The skills follow the same Agent Skills standard Codex uses, so no content changes are
 needed — only placement. Codex reads `AGENTS.md` automatically; to expose the skills:
 
-- **Per-repo:** `ln -s ../skills .agents/skills` from the repo root — Codex discovers skills
-  in `.agents/skills/` and implicitly invokes them by description.
+Clone pylegible somewhere first:
+
+```bash
+git clone https://github.com/vsbaldeev/pylegible.git
+```
+
+- **Per-repo:** from the target project's root, symlink to the clone's `skills/` directory —
+  Codex discovers skills in `.agents/skills/` and implicitly invokes them by description:
+
+  ```bash
+  ln -s /absolute/path/to/pylegible/skills .agents/skills
+  ```
+
+  If the target repo already has an `.agents/skills` directory or its own `AGENTS.md`, don't
+  overwrite them — symlink the individual skill folders you want instead, and merge the
+  relevant rules from pylegible's `AGENTS.md` into the target's by hand.
 - **Global:** copy or symlink each skill directory into `~/.codex/skills/`.
 
 Explicit invocation in Codex is `$python-logging` (etc.). The `.claude-plugin/` manifest and

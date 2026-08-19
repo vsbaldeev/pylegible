@@ -1,7 +1,8 @@
 # Python Testing — reference catalog
 
-Depth for `python-testing`. Load when you need the details. Examples obey the project
-`CLAUDE.md` conventions.
+Depth for `python-testing`. Load when you need the details. Examples follow house
+convention: no single-letter names, no leading single underscore, bodies ≤40 lines,
+Google-style docstrings, annotated signatures.
 
 ## TDD cycle (double loop)
 

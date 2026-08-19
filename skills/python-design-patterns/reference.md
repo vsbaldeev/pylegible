@@ -1,9 +1,9 @@
 # Python Design Patterns — reference catalog
 
 Depth for `python-design-patterns`. Load when you need the full shape of a pattern that
-earns its keep, or evidence for rejecting one that does not. Every example here obeys the
-house conventions in the project `CLAUDE.md` (no single-letter names, no leading single
-underscore, ≤40-line bodies, Google-style docstrings, annotated signatures).
+earns its keep, or evidence for rejecting one that does not. Every example here follows
+house convention: no single-letter names, no leading single underscore, ≤40-line bodies,
+Google-style docstrings, annotated signatures.
 
 The eight patterns below are the ones worth knowing by name in Python. The other fifteen
 are covered by the verdict table in `SKILL.md` — read that first.

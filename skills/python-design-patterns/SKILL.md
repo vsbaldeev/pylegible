@@ -131,4 +131,5 @@ The design of one class — dataclass or not, `Protocol` vs ABC, SOLID, encapsul
 **python-metaprogramming**. Dunder methods and custom iteration → **python-data-model**.
 Concurrency structure (producer/consumer, worker pools) → **python-concurrency**.
 See `reference.md` for full examples of the eight patterns that earn their keep, plus the
-Java-isms to reject on sight. The project `CLAUDE.md` lists the full principle set.
+Java-isms to reject on sight. Full principle set: SOLID, composition over inheritance,
+Law of Demeter, DRY, YAGNI, KISS, fail fast, separation of concerns, least surprise.

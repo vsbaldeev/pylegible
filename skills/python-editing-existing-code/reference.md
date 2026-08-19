@@ -2,7 +2,8 @@
 
 Depth for `python-editing-existing-code`. Load when you need the details. The moves here
 come from Michael Feathers, *Working Effectively with Legacy Code*, adapted to Python.
-Examples obey the project `CLAUDE.md` conventions. How to write the tests themselves —
+Examples follow house convention: no single-letter names, no leading single underscore,
+bodies ≤40 lines, Google-style docstrings, annotated signatures. How to write the tests themselves —
 fixtures, mocks, markers — is **python-testing**; this catalog covers *when* and *what to
 pin*, not pytest mechanics.
 
@@ -189,5 +190,6 @@ Restraint needs a definition of "done with this change," or every edit metastasi
   work — and, past a certain size, its own spec.
 
 The test for "is this in scope?": could you write the commit message as one sentence with no
-"and"? If not, you are shipping two changes as one. The project `CLAUDE.md` lists the full
-design-principle set that the cleanup, when you do schedule it, should aim for.
+"and"? If not, you are shipping two changes as one. The cleanup, when you do schedule it,
+should aim for the full principle set: SOLID, composition over inheritance, Law of Demeter,
+DRY, YAGNI, KISS, fail fast, separation of concerns, least surprise.

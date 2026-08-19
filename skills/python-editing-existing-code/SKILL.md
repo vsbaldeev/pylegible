@@ -91,4 +91,5 @@ the edit. How to write the pinning test itself — fixtures, mocks, `pytest.rais
 you rewrite → **python-idioms**; redesigning a class you're extending → **python-oop**. See
 `reference.md` for the seam catalogue, characterization- and approval-test recipes,
 sprout/wrap for untestable code, strangler-fig for larger replacements, and how to record a
-violation you're leaving alone. The project `CLAUDE.md` lists the full design-principle set.
+violation you're leaving alone. Full principle set: SOLID, composition over inheritance,
+Law of Demeter, DRY, YAGNI, KISS, fail fast, separation of concerns, least surprise.

@@ -79,5 +79,6 @@ Special methods (`__eq__`, `__iter__`, `__hash__`) and custom sequences →
 **python-metaprogramming**. General idioms and error handling → **python-idioms**. Which
 module or package a type belongs in, and the layering that keeps domain types free of I/O →
 **python-project-structure**. See `reference.md` for dataclasses, Protocol vs ABC,
-SOLID applied to Python, the Law of Demeter, and `__slots__`. The project `CLAUDE.md`
-lists the full design-principle set.
+SOLID applied to Python, the Law of Demeter, and `__slots__`. Full principle set: SOLID,
+composition over inheritance, Law of Demeter, DRY, YAGNI, KISS, fail fast, separation of
+concerns, least surprise.
