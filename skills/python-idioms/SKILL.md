@@ -63,6 +63,8 @@ active_admin_emails = [u.email for g in groups for u in g.users if u.active if u
 - Bare `except:` swallowing errors and returning `None`.
 - Reaching for a comprehension when a named loop or helper reads better.
 - `from module import *`.
+- A function that only calls another function with the same arguments, unchanged — call the
+  original directly; the wrapper adds a name to trace through and nothing else.
 
 ## Boundary
 

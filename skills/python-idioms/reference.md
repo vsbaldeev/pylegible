@@ -111,6 +111,21 @@ presentation concern too — see python-logging for stdout-vs-stderr.
 - **Least surprise** — code should behave the way a reader expects. No side effects hidden
   behind an innocent-looking name; no function that returns different types by mood.
 
+Needless indirection fails KISS the same way needless cleverness does — a function that adds
+no behavior is a detour, not an abstraction:
+
+```python
+# Needless: adds a name to trace through, changes nothing
+def get_user(user_id: str) -> User:
+    return fetch_user(user_id)
+
+# Call fetch_user directly instead — no wrapper needed
+```
+
+A wrapper earns its place only when it changes something: adapts a signature, adds a default,
+narrows a type, adds logging/caching/error translation. Delegation with zero added behavior
+is a rename in disguise.
+
 ## Type hints
 
 Annotate every signature. Use built-in generics; use `X | None` over `Optional[X]`.
