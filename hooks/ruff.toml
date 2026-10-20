@@ -1,0 +1,32 @@
+# Fallback ruff config for pylegible. Used only when the project defines no ruff config of its own.
+# Encodes the mechanically checkable rules from the pylegible skills.
+line-length = 120
+
+[lint]
+select = [
+    "E402",    # imports at the top of the module
+    "E501",    # line length
+    "E722",    # no bare except
+    "E741",    # ambiguous single-letter names (l, O, I)
+    "TID252",  # no relative imports
+    "PLC0415", # no imports inside functions
+    "T201",    # no print; use logging
+    "B904",    # raise ... from error
+    "BLE001",  # no blind except
+    "N",       # pep8-naming
+    "D102",    # docstring on public methods
+    "D103",    # docstring on public functions
+    "D417",    # document every argument
+    "ANN",     # annotate signatures
+]
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint.per-file-ignores]
+"test_*.py" = ["D", "ANN"]
+"**/tests/**" = ["D", "ANN"]
+"conftest.py" = ["D", "ANN"]

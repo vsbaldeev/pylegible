@@ -39,8 +39,24 @@ pylegible/
 ├── .claude-plugin/{plugin.json, marketplace.json}   Claude Code plugin manifest
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
+├── hooks/{hooks.json, lint_python.py, check_ruff.py, ruff.toml}   ruff check after Python edits + install hint
 └── skills/<name>/{SKILL.md, reference.md}             the ten skills
 ```
+
+## Lint hook (Claude Code)
+
+After every `Edit`/`Write`/`MultiEdit` of a `.py` file, a `PostToolUse` hook runs `ruff check`
+and feeds any findings back to the agent. It is report-only (never auto-fixes) and silent when
+the file is clean or ruff is unavailable (it uses `ruff` if installed, else `uvx ruff`). If the
+project has its own ruff config (`ruff.toml`, `.ruff.toml`, or `[tool.ruff]` in
+`pyproject.toml`) that is used; otherwise the bundled `hooks/ruff.toml` applies. It covers the
+mechanical rules only — absolute imports, imports at top, 120-char lines, no bare `except`,
+no `print`, docstrings, annotations, naming. The 40-line function limit and the
+leading-underscore ban have no ruff equivalent and remain prose-only.
+
+If a Python project has neither `ruff` nor `uvx`, a `SessionStart` hook (`check_ruff.py`) tells the
+agent once so it can suggest installing ruff; it never installs anything itself. Silence it with
+`PYLEGIBLE_NO_LINT_HINT=1`.
 
 ## Install — Claude Code
 
