@@ -34,12 +34,13 @@ skill is the house style for everyday Python; the deep catalog is in `reference.
 |---|---|
 | Names | Descriptive; never single-letter, never leading single underscore. `__name` only for truly private members. |
 | Functions | ≤40 body lines; extract well-named helpers past that. |
-| Line length | ≤120 characters. Wrap with parens, not `\`; extract a variable before splitting an expression mid-call. |
+| Line length | ≤120 characters. Don't wrap or split a statement that fits within 120; keep intentional vertical layout (trailing-comma argument lists, one step per line in chains). When it doesn't fit, wrap with parens, not `\`, and extract a variable before splitting an expression mid-call. |
 | Errors | Catch specific exceptions; chain with `raise ... from error`; never bare `except`. |
 | Style | EAFP (try/except) over LBYL (pre-checks). Explicit over implicit. |
 | Comprehensions | Only for simple map/filter. If it needs two conditions or a nested loop, write the loop. |
 | Types | Annotate signatures; prefer built-in generics (`list[str]`). |
 | Comparisons | `is None`, `isinstance(value, SomeType)` — never `== None` or `type(value) == SomeType`. |
+| Imports | Absolute only — no relative imports. All at the top of the module; exceptions only for breaking a circular import or an optional heavy dependency, with a comment saying why. |
 
 ## Example
 

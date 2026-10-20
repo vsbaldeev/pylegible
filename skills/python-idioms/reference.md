@@ -206,6 +206,34 @@ Order: standard library, third-party, local — each group separated by a blank 
 (isort/ruff enforce it). Avoid `from module import *` — import the module, or the specific
 names you use, so a reader can trace where each name came from.
 
+Use absolute imports only (`from mypackage.orders.pricing import calculate_total`) —
+unambiguous, greppable, and stable when a file moves within the package. Do not use relative
+imports (`from . import pricing`), even one level deep; if the absolute path feels verbose,
+that is a hint the module is in the wrong place — see python-project-structure.
+(ruff `TID252` enforces this.)
+
+Put every import at the top of the module, before any other code. Two exceptions, each marked
+with a comment saying why: breaking a circular import, and an optional or heavy dependency
+imported inside the function that needs it. Imports under `if TYPE_CHECKING:` also stay at the
+top level of the module. (ruff `E402` and `PLC0415` enforce this.)
+
+```python
+# Do: absolute, at the top of the module
+from orders.domain.pricing import calculate_total
+
+# Don't: relative, at any depth
+from . import pricing
+from ...domain.pricing import calculate_total
+
+def export_report(rows):
+    # Don't: import buried in a function without a reason
+    import csv
+
+def load_model():
+    # Allowed: optional heavy dependency, deferred on purpose
+    import torch  # heavy; only needed when a model is loaded
+```
+
 Where modules and packages live, what a package exports through `__init__.py`, and which way
 imports may flow between them → **python-project-structure**.
 
