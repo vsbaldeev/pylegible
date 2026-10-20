@@ -10,7 +10,7 @@ Its overriding value: **code that is easy for a human to read, not merely correc
 
 ## What's inside
 
-- **Nine topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+- **Ten topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
   `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
   `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
 - **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
@@ -40,7 +40,7 @@ pylegible/
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
 ├── hooks/{hooks.json, lint_python.py, check_conventions.py, check_ruff.py, ruff.toml}   lint after Python edits
-└── skills/<name>/{SKILL.md, reference.md}             the nine skills
+└── skills/<name>/{SKILL.md, reference.md}             the ten skills
 ```
 
 ## Lint hook (Claude Code)
@@ -69,7 +69,7 @@ From inside Claude Code, add the marketplace and install the plugin:
 /plugin install pylegible@pylegible
 ```
 
-The nine skills then appear in the skill listing and auto-trigger by description. Manage or
+The ten skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
 
 <details>
