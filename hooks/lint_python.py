@@ -1,7 +1,7 @@
-"""PostToolUse hook: run ruff on a Python file the agent just edited and report findings.
+"""PostToolUse hook: lint a Python file the agent just edited (ruff plus pylegible's own checks).
 
 Report-only. Exits 2 with the findings on stderr so Claude Code feeds them back to the agent;
-exits 0 silently when the file is clean, not Python, or ruff is unavailable.
+exits 0 silently when the file is clean or not Python. Without ruff, only the own checks run.
 """
 
 # Hooks run under whatever `python3` is on PATH, which may be pre-3.10; keep annotations lazy.
@@ -13,6 +13,8 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+from check_conventions import find_violations
 
 PROJECT_CONFIG_NAMES = ("ruff.toml", ".ruff.toml")
 BUNDLED_CONFIG = Path(__file__).with_name("ruff.toml")
@@ -57,17 +59,27 @@ def lint(command: list[str], target: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run([*arguments, str(target)], capture_output=True, text=True, check=False)
 
 
+def ruff_findings(target: Path) -> str:
+    """Return ruff's findings for target, or an empty string if clean or ruff is unavailable."""
+    command = ruff_command()
+    if command is None:
+        return ""
+    result = lint(command, target)
+    if result.returncode == 0:
+        return ""
+    return result.stdout.strip() or result.stderr.strip()
+
+
 def main() -> int:
     """Lint the edited file and return the hook's exit code."""
     target = read_edited_path()
-    command = ruff_command()
-    if target is None or target.suffix != ".py" or not target.is_file() or command is None:
+    if target is None or target.suffix != ".py" or not target.is_file():
         return 0
-    result = lint(command, target)
-    if result.returncode == 0:
+    findings = [ruff_findings(target), *find_violations(target)]
+    report = "\n".join(finding for finding in findings if finding)
+    if not report:
         return 0
-    findings = result.stdout.strip() or result.stderr.strip()
-    sys.stderr.write(f"ruff found issues in {target.name}; please fix:\n{findings}\n")
+    sys.stderr.write(f"pylegible lint found issues in {target.name}; please fix:\n{report}\n")
     return BLOCKING_EXIT_CODE
 
 

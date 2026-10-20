@@ -18,7 +18,7 @@ from lint_python import ruff_command
 OPT_OUT_VARIABLE = "PYLEGIBLE_NO_LINT_HINT"
 PROJECT_MARKERS = ("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile")
 HINT = (
-    "pylegible's ruff lint hook is inactive because neither `ruff` nor `uvx` was found. "
+    "pylegible's ruff checks are inactive (its other lint checks still run) because neither `ruff` nor `uvx` was found. "
     "Briefly suggest the user install it (e.g. `uv tool install ruff` or `pip install ruff`); "
     "do not install it yourself."
 )
