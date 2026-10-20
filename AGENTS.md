@@ -107,5 +107,7 @@ so no content changes are needed. Explicit invocation in Codex is `$python-loggi
 
 The skill-usage logger — Claude Code hooks in `~/.claude/settings.json` (`UserPromptSubmit`
 and `PreToolUse` on the `Skill` tool) — is Anthropic-specific and does not run under Codex.
+The ruff lint hook (`hooks/`: a `PostToolUse` check after Python edits, plus a `SessionStart`
+hint when ruff is missing) is Claude Code-only too; under Codex, run `ruff check` yourself.
 The `.claude-plugin/` manifest and `marketplace.json` are Claude-Code-only too; Codex reads
 the skills directory directly and needs neither.
