@@ -36,16 +36,17 @@ Its overriding value: **code that is easy for a human to read, not merely correc
 
 ```
 pylegible/
-├── .claude-plugin/{plugin.json, marketplace.json}   Claude Code plugin manifest
+├── .claude-plugin/{plugin.json, marketplace.json}   Claude Code manifest (+ marketplace Codex also reads)
+├── .codex-plugin/plugin.json                          Codex manifest
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
 ├── hooks/{hooks.json, lint_python.py, check_conventions.py, check_ruff.py, ruff.toml}   lint after Python edits
 └── skills/<name>/{SKILL.md, reference.md}             the ten skills
 ```
 
-## Lint hook (Claude Code)
+## Lint hook (Claude Code and Codex)
 
-After every `Edit`/`Write`/`MultiEdit` of a `.py` file, a `PostToolUse` hook runs `ruff check`
+After every `Edit`/`Write`/`MultiEdit` (Claude Code) or `apply_patch` (Codex) touching a `.py` file, a `PostToolUse` hook runs `ruff check`
 and feeds any findings back to the agent. It is report-only (never auto-fixes) and silent when
 the file is clean or ruff is unavailable (it uses `ruff` if installed, else `uvx ruff`). If the
 project has its own ruff config (`ruff.toml`, `.ruff.toml`, or `[tool.ruff]` in
@@ -105,29 +106,35 @@ for the skills to show up.
 
 ## Install — Codex
 
-The skills follow the same Agent Skills standard Codex uses, so no content changes are
-needed — only placement. Codex reads `AGENTS.md` automatically; to expose the skills:
+The repo is also a Codex plugin (`.codex-plugin/plugin.json`) and Codex reads the same
+`.claude-plugin/marketplace.json`, so install is two commands:
 
-Clone pylegible somewhere first:
+```bash
+codex plugin marketplace add vsbaldeev/pylegible
+codex plugin add pylegible@pylegible
+```
+
+You get the ten skills (invoked by description, or explicitly as `$python-logging`) and the same
+lint hooks as Claude Code. Codex does not trust plugin hooks automatically: open `/hooks` in the
+CLI and approve them, and expect to re-approve after an update (`codex plugin marketplace upgrade`).
+Codex reads `AGENTS.md` from the project you work in, not from the plugin, so the always-on rules
+come from the skills themselves (each `SKILL.md` is self-contained).
+
+<details>
+<summary>Without the plugin system (symlink)</summary>
+
+Clone pylegible, then from the target project's root expose the skills (this gives skills only, no hooks):
 
 ```bash
 git clone https://github.com/vsbaldeev/pylegible.git
+ln -s /absolute/path/to/pylegible/skills .agents/skills
 ```
 
-- **Per-repo:** from the target project's root, symlink to the clone's `skills/` directory —
-  Codex discovers skills in `.agents/skills/` and implicitly invokes them by description:
+If the target repo already has an `.agents/skills` directory or its own `AGENTS.md`, symlink the
+individual skill folders instead and merge the relevant rules from pylegible's `AGENTS.md` by
+hand. Global alternative: copy or symlink each skill directory into `~/.codex/skills/`.
 
-  ```bash
-  ln -s /absolute/path/to/pylegible/skills .agents/skills
-  ```
-
-  If the target repo already has an `.agents/skills` directory or its own `AGENTS.md`, don't
-  overwrite them — symlink the individual skill folders you want instead, and merge the
-  relevant rules from pylegible's `AGENTS.md` into the target's by hand.
-- **Global:** copy or symlink each skill directory into `~/.codex/skills/`.
-
-Explicit invocation in Codex is `$python-logging` (etc.). The `.claude-plugin/` manifest and
-any Claude Code hooks do not apply to Codex.
+</details>
 
 ## Conventions and principles
 

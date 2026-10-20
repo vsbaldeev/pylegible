@@ -12,7 +12,7 @@ jobs:
 
       - name: Validate JSON manifests
         run: |
-          for manifest in .claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+          for manifest in .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json; do
             echo "checking $manifest"
             jq -e . "$manifest" > /dev/null
           done
@@ -30,6 +30,11 @@ jobs:
           fi
           if [ "$plugin_version" != "$entry_version" ]; then
             echo "FAIL plugin version '$plugin_version' != marketplace entry '$entry_version'"
+            exit_code=1
+          fi
+          codex_version=$(jq -r .version .codex-plugin/plugin.json)
+          if [ "$plugin_version" != "$codex_version" ]; then
+            echo "FAIL plugin version '$plugin_version' != Codex manifest '$codex_version'"
             exit_code=1
           fi
           echo "ok   $plugin_name@$plugin_version"

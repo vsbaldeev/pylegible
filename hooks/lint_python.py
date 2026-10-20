@@ -1,6 +1,9 @@
-"""PostToolUse hook: lint a Python file the agent just edited (ruff plus pylegible's own checks).
+"""PostToolUse hook: lint the Python files the agent just edited (ruff plus pylegible's own checks).
 
-Report-only. Exits 2 with the findings on stderr so Claude Code feeds them back to the agent;
+Works under Claude Code (Edit/Write: `tool_input.file_path`) and Codex (apply_patch: paths parsed
+from `tool_input.command`).
+
+Report-only. Exits 2 with the findings on stderr, which both tools feed back to the agent;
 exits 0 silently when the file is clean or not Python. Without ruff, only the own checks run.
 """
 
@@ -8,7 +11,7 @@ exits 0 silently when the file is clean or not Python. Without ruff, only the ow
 from __future__ import annotations
 
 import json
-import os
+import re
 import shutil
 import subprocess
 import sys
@@ -19,16 +22,30 @@ from check_conventions import find_violations
 PROJECT_CONFIG_NAMES = ("ruff.toml", ".ruff.toml")
 BUNDLED_CONFIG = Path(__file__).with_name("ruff.toml")
 BLOCKING_EXIT_CODE = 2
+PATCH_PATH_PATTERN = re.compile(r"^\*\*\* (?:(?:Add|Update) File: (.+)|Move to: (.+))$", re.MULTILINE)
 
 
-def read_edited_path() -> Path | None:
-    """Return the file path from the hook's JSON payload on stdin, or None if absent."""
+def read_payload() -> dict:
+    """Return the hook's JSON payload from stdin, or an empty dict if it is not valid JSON."""
     try:
-        payload = json.load(sys.stdin)
+        return json.load(sys.stdin)
     except json.JSONDecodeError:
-        return None
-    file_path = payload.get("tool_input", {}).get("file_path")
-    return Path(file_path) if file_path else None
+        return {}
+
+
+def paths_from_patch(patch_text: str) -> list[str]:
+    """Return the file paths a Codex apply_patch body adds, updates or moves to."""
+    matches = PATCH_PATH_PATTERN.findall(patch_text)
+    return [added_or_updated or moved_to for added_or_updated, moved_to in matches]
+
+
+def edited_paths(payload: dict) -> list[Path]:
+    """Return the files the tool call edited: Claude's `file_path`, or paths inside a Codex patch."""
+    tool_input = payload.get("tool_input") or {}
+    raw_paths = [tool_input["file_path"]] if tool_input.get("file_path") else []
+    raw_paths += paths_from_patch(tool_input.get("command") or "")
+    working_directory = Path(payload.get("cwd") or Path.cwd())
+    return [working_directory / raw_path for raw_path in raw_paths]
 
 
 def project_defines_ruff_config(start: Path) -> bool:
@@ -70,16 +87,21 @@ def ruff_findings(target: Path) -> str:
     return result.stdout.strip() or result.stderr.strip()
 
 
-def main() -> int:
-    """Lint the edited file and return the hook's exit code."""
-    target = read_edited_path()
-    if target is None or target.suffix != ".py" or not target.is_file():
-        return 0
+def report_for(target: Path) -> str:
+    """Return the combined lint findings for one file, or an empty string if it is clean."""
+    if target.suffix != ".py" or not target.is_file():
+        return ""
     findings = [ruff_findings(target), *find_violations(target)]
-    report = "\n".join(finding for finding in findings if finding)
+    return "\n".join(finding for finding in findings if finding)
+
+
+def main() -> int:
+    """Lint the edited files and return the hook's exit code."""
+    reports = [report_for(target) for target in edited_paths(read_payload())]
+    report = "\n".join(text for text in reports if text)
     if not report:
         return 0
-    sys.stderr.write(f"pylegible lint found issues in {target.name}; please fix:\n{report}\n")
+    sys.stderr.write(f"pylegible lint found issues; please fix:\n{report}\n")
     return BLOCKING_EXIT_CODE
 
 

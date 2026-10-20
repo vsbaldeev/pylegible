@@ -14,6 +14,8 @@ contributions should match both its conventions and its structure.
   there are rationed: name a sibling only where the two scopes genuinely touch, not every
   skill in the plugin. Boundary sections are where the full map lives.
 - `CLAUDE.md` (Claude Code) and `AGENTS.md` (Codex) hold the always-on rules and stay in sync.
+- Versions live in three manifests (`.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`,
+  `.codex-plugin/plugin.json`); bump all three together — CI fails if they disagree.
 
 ## Conventions (every code example must obey these)
 

@@ -104,11 +104,13 @@ them in Codex, do one of:
 The frontmatter (`name` + `description`) already matches the Agent Skills standard Codex uses,
 so no content changes are needed. Explicit invocation in Codex is `$python-logging` (etc.).
 
-## Not portable to Codex
+## Codex and Claude Code parity
 
-The skill-usage logger — Claude Code hooks in `~/.claude/settings.json` (`UserPromptSubmit`
-and `PreToolUse` on the `Skill` tool) — is Anthropic-specific and does not run under Codex.
-The ruff lint hook (`hooks/`: a `PostToolUse` check after Python edits, plus a `SessionStart`
-hint when ruff is missing) is Claude Code-only too; under Codex, run `ruff check` yourself.
-The `.claude-plugin/` manifest and `marketplace.json` are Claude-Code-only too; Codex reads
-the skills directory directly and needs neither.
+The same repo installs in both tools: `.claude-plugin/` is read by Claude Code, `.codex-plugin/`
+by Codex, and both share `skills/` and `hooks/`. Codex also reads `.claude-plugin/marketplace.json`,
+so there is one marketplace file. The ruff lint hook (a `PostToolUse` check after Python edits,
+plus a `SessionStart` hint when ruff is missing) runs in both; under Codex the user must approve it
+once with `/hooks`, and again after each plugin update.
+
+Claude Code only: the skill-usage logger — hooks in `~/.claude/settings.json` (`UserPromptSubmit`
+and `PreToolUse` on the `Skill` tool) — lives in user settings, not in this plugin.

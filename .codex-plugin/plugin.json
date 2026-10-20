@@ -1,0 +1,19 @@
+{
+  "name": "pylegible",
+  "version": "0.7.0",
+  "description": "Opinionated Python development skills: idiomatic style, design patterns, project structure, pytest testing, logging discipline, OOP design, the data model, concurrency, metaprogramming, and safely editing existing code. Optimized for code that is easy for humans to read.",
+  "author": {
+    "name": "vsbaldeev"
+  },
+  "homepage": "https://github.com/vsbaldeev/pylegible",
+  "repository": "https://github.com/vsbaldeev/pylegible",
+  "license": "MIT",
+  "keywords": ["python", "idioms", "readability", "pytest", "ruff"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "pylegible",
+    "shortDescription": "Python that is easy for a human to read",
+    "category": "Coding"
+  }
+}
