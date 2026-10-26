@@ -200,6 +200,27 @@ def read_lines(path: Path) -> Iterator[str]:
             yield line.strip()
 ```
 
+## Definition order
+
+Define a function or method above the code that calls it. The file then reads top-down from
+building blocks to the code that composes them, and no line refers to a name the reader has
+not yet seen.
+
+```python
+def parse_line(line: str) -> Record:
+    """Parse one CSV line into a record."""
+    ...
+
+
+def parse_file(path: Path) -> list[Record]:
+    """Parse every line of a file."""
+    return [parse_line(line) for line in path.read_text().splitlines()]
+```
+
+The same holds inside a class: a helper method sits above the method that calls it. Python
+allows either order at call time; this is a readability rule, not a language requirement.
+Mutually recursive functions cannot both come first — keep them adjacent.
+
 ## Imports
 
 Order: standard library, third-party, local — each group separated by a blank line, sorted

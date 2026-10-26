@@ -244,6 +244,49 @@ def build_place_order(database_url: str, stripe_key: str) -> PlaceOrder:
 
 `bootstrap.py` sits at the package root, not inside a layer — it belongs to none of them.
 
+### The settings module
+
+An application that reads configuration — database URLs, environment variables, config files,
+secrets — reads it in exactly one module. At stage 1–2 that is `settings.py` (or `config.py`)
+beside the code; at stage 3 it sits at the package root next to `bootstrap.py`, because it
+belongs to no layer.
+
+```python
+# src/orders/settings.py
+"""The only module that reads the environment."""
+
+import os
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Settings:
+    """Typed application configuration."""
+
+    database_url: str
+    stripe_key: str
+
+
+def load_settings() -> Settings:
+    """Read settings from the environment, failing fast when one is missing.
+
+    Returns:
+        The validated settings.
+
+    Raises:
+        KeyError: If a required variable is not set.
+    """
+    return Settings(
+        database_url=os.environ["DATABASE_URL"],
+        stripe_key=os.environ["STRIPE_KEY"],
+    )
+```
+
+The entrypoint calls `load_settings()` once and hands values to `bootstrap.py`; domain and
+application code receive plain arguments and never import `settings`. Missing configuration
+then fails at startup, the full list of knobs is readable in one file, and a test builds a
+`Settings(...)` directly instead of patching `os.environ`.
+
 ## `__init__.py`
 
 **Package root** — declares the public surface, ≤10 names:
@@ -439,6 +482,7 @@ src/orders/
 | Twenty modules in one directory | Group by concern into subpackages; ≤7 entries each |
 | Re-export chains in every `__init__.py` | Empty interior `__init__.py`; import from where the name lives |
 | `domain/` importing `adapters/` | Declare a Protocol in `application`, inject it, wire in `bootstrap.py` |
+| `os.environ` / config-file reads scattered through modules | One `settings.py` that reads once and exposes typed values |
 | Circular import fixed by importing inside a function | Fix the direction — the cycle is the message |
 | Layering a 200-line tool | Stay at stage 1 or 2 until a promotion trigger actually fires |
 | Flat `tests/` kept past stage 3 | Mirror in `unit/`; watch for hierarchy leaking into filenames |

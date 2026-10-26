@@ -63,6 +63,21 @@ tradition. We adopt them; we don't claim them.
   *Why:* past roughly a screenful a function usually does more than one thing and stops
   fitting in the reader's head; the limit forces extraction into named steps (*Clean Code*,
   and *Refactoring*'s Extract Function — both argue for smaller still; 40 is a pragmatic ceiling).
+- Define a function or method before the code that calls it: if a custom function or method
+  uses another, the callee is declared above its caller, so the file reads top-down from
+  building blocks to the code that composes them.
+  *Why:* the reader meets every name already explained, never a forward reference to
+  something they have not seen yet (*Clean Code* orders by the stepdown rule; this is the
+  inverse reading order, chosen so a file never needs scrolling ahead to understand a line).
+
+## Configuration
+
+- A Python application that reads settings (database, environment variables, config files,
+  secrets) does it in one dedicated module — e.g. `settings.py` or `config.py`. Everything
+  else imports typed values from it; nothing else calls `os.environ` or opens a config file.
+  *Why:* one authoritative home for configuration (DRY, separation of concerns): the full
+  list of knobs is readable in one place, validation fails fast at startup, and tests
+  override one object (*The Twelve-Factor App*, "Config").
 
 ## Docstrings and types
 

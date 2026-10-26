@@ -36,6 +36,17 @@ conflict, choose clarity.
   *Why:* past roughly a screenful a function usually does more than one thing and stops
   fitting in the reader's head (*Clean Code*, and *Refactoring*'s Extract Function — both
   argue for smaller still; 40 is a pragmatic ceiling).
+- Define a function or method before the code that calls it: a callee is declared above its
+  caller, so the file reads top-down from building blocks to the code that composes them.
+  *Why:* the reader meets every name already explained, never a forward reference.
+
+## Configuration
+
+- An application that reads settings (database, environment variables, config files, secrets)
+  does it in one dedicated module (`settings.py` / `config.py`). Everything else imports typed
+  values from it; nothing else calls `os.environ` or opens a config file.
+  *Why:* one authoritative home for configuration — readable in one place, validated at
+  startup, overridden in one spot by tests (*The Twelve-Factor App*, "Config").
 
 ## Docstrings and types
 

@@ -43,6 +43,7 @@ If yes, it belongs here. If it depends on what the code says, it belongs to a si
 | Public surface | Root `__init__.py` declares `__all__`, ≤10 names. Interior `__init__.py` stays empty. |
 | Dependency rule | Imports point inward: `adapters → application → domain`. Never the reverse. |
 | Composition root | One `bootstrap.py` wires concrete adapters into use cases. Nowhere else does. |
+| Settings | Reading settings (database, env vars, config files, secrets) lives in one dedicated module — `settings.py` or `config.py`. Nothing else touches `os.environ`. |
 | Naming | Name a module for what it holds. Never `utils`, `helpers`, `common`, `misc`, `shared`, `manager`. |
 | Tests | Mirror the source tree when a test covers one module (`unit/`, and adapter tests). Name for behavior when it spans modules (`e2e/`). Flat `tests/` is fine until stage 3. |
 
@@ -121,6 +122,8 @@ test needs a real system is a domain module doing I/O.
 
 - Starting at stage 3 for a 200-line tool — four near-empty directories are their own
   readability problem. Earn each stage.
+- `os.environ.get(...)` scattered across modules: the configuration has no home, no validation,
+  and tests must patch the environment in many places. Centralize it in `settings.py`.
 - A `utils.py` that becomes wherever anything unclassifiable lands.
 - Re-exporting through every interior `__init__.py`: it invites import cycles and hides
   where a name actually lives.
