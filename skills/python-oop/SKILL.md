@@ -34,7 +34,7 @@ deep inheritance. Depth in `reference.md`.
 | Defining an interface? | `Protocol` (structural, no inheritance needed by implementers). |
 | Sharing real behavior across subclasses? | `ABC` with concrete methods + `@abstractmethod`. |
 | Reuse: inherit or compose? | Compose — hold a collaborator, don't subclass for reuse. |
-| Hiding internals? | `__name` for truly private; no leading single underscore. |
+| Hiding internals? | `__name` for truly private; no leading single underscore (sole exception: a pickled process target — see python-concurrency). |
 
 ## Example
 

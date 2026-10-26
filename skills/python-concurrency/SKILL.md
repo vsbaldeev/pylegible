@@ -49,6 +49,10 @@ not *computing*. For computing, use processes (or a free-threaded build — see 
 - Processes: keep worker entry points import-safe (guard with `if __name__ == "__main__":`);
   on Linux the default start method is `forkserver` from 3.14 (elsewhere `spawn`), so module
   import must have no side effects.
+- Process targets must be picklable by reference: a module-level function or a `staticmethod`
+  with a **single** leading underscore (`_run_api_server`) — the one place the house style
+  allows it. Never `__name`: mangling stores it as `_Class__name`, `spawn` cannot find it, and
+  you get `PicklingError`. `fork` hides the bug because it never pickles the target.
 
 ## Example
 
@@ -79,6 +83,8 @@ def fetch_all(urls: list[str], client: HttpClient) -> dict[str, bytes]:
 - Sharing a mutable `dict`/`list` across threads with no lock — races and lost updates.
 - Fire-and-forget tasks: creating a task and never awaiting it, so its exception vanishes.
   Use `TaskGroup`, which awaits and surfaces failures.
+- A `Process(target=Class.__worker)` that works under `fork` and raises `PicklingError` under
+  `spawn`: the name is mangled. Rename to `_worker` (the sanctioned exception) or hoist it.
 - Using processes for I/O-bound work — pickling and process startup cost for no benefit.
 - Never calling `future.result()`, silently swallowing every worker exception.
 - Passing `timeout=` to `future.result()` inside an `as_completed` loop — the future is already

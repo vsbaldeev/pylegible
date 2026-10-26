@@ -55,8 +55,8 @@ project has its own ruff config (`ruff.toml`, `.ruff.toml`, or `[tool.ruff]` in
 mechanical rules: absolute imports, imports at top, 120-char lines, no bare `except`, no `print`,
 docstrings, annotations, naming. Two rules ruff has no equivalent for are checked by
 `check_conventions.py` (stdlib `ast`, runs even without ruff): `PYL001` function body over 40
-lines, and `PYL002` a name *defined* with a single leading underscore (`__name`, dunders and a
-bare `_` are allowed; reading someone else's `obj._private` is not flagged).
+lines, and `PYL002` a name *defined* with a single leading underscore (`__name`, dunders, a
+bare `_` and a function passed as `target=` or to an executor's `submit`/`map` are allowed; reading someone else's `obj._private` is not flagged).
 
 If a Python project has neither `ruff` nor `uvx`, a `SessionStart` hook (`check_ruff.py`) tells the
 agent once so it can suggest installing ruff; it never installs anything itself. Silence it with

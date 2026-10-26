@@ -25,6 +25,9 @@ conflict, choose clarity.
   weak, unenforced "internal use" hint. We reject that ambiguity — reserve `__name`, whose
   mangling actually makes access bite, for when privacy must be real, and use no prefix
   otherwise. A minority position, stated plainly so a reader can disagree knowingly.
+  *Exception:* a function that must be pickled by reference — a `multiprocessing` `target=` or
+  an executor `submit`/`map` callable under `spawn` — takes a single leading underscore
+  (`_run_api_server`), because `__name` mangling breaks that lookup. Nothing else does.
 - Module-level names never start with an underscore. Module-level constants use `UPPER_CASE`.
   *Why:* a leading underscore is Python's "not part of the public API" marker (skipped by
   `import *`); we keep module surfaces intentional rather than lean on it. `UPPER_CASE`

@@ -3,7 +3,9 @@
 PYL001: a function body longer than 40 lines (blank lines count; the signature, decorators,
 the function's own docstring and comment-only lines do not).
 PYL002: a name defined with a single leading underscore (`__name` and bare `_` are allowed).
-Only definitions are flagged, so reading a third-party `obj._private` is fine.
+Only definitions are flagged, so reading a third-party `obj._private` is fine. A function that is
+handed to another process or executor (`target=name`, `pool.submit(name, ...)`) must be picklable
+by reference, which `__name` mangling breaks, so a single underscore is allowed on it.
 """
 
 # Hooks run under whatever `python3` is on PATH, which may be pre-3.10; keep annotations lazy.
@@ -15,6 +17,7 @@ import tokenize
 from pathlib import Path
 
 MAX_FUNCTION_BODY_LINES = 40
+EXECUTOR_METHODS = {"submit", "map", "starmap", "apply", "apply_async", "map_async", "imap", "imap_unordered"}
 
 
 def comment_only_lines(source: str) -> set[int]:
@@ -62,6 +65,31 @@ def defined_names(node: ast.AST) -> list[str | None]:
     return []
 
 
+def referenced_name(node: ast.AST) -> str | None:
+    """Return the name a bare `name` or `owner.name` expression refers to, else None."""
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    return None
+
+
+def pickled_function_names(tree: ast.AST) -> set[str]:
+    """Return names passed as `target=` or as the first argument of an executor call."""
+    names = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        for keyword in node.keywords:
+            if keyword.arg == "target":
+                names.add(referenced_name(keyword.value))
+        is_executor_call = isinstance(node.func, ast.Attribute) and node.func.attr in EXECUTOR_METHODS
+        if is_executor_call and node.args:
+            names.add(referenced_name(node.args[0]))
+    names.discard(None)
+    return names
+
+
 def find_violations(path: Path) -> list[str]:
     """Return `path:line: CODE message` findings for the pylegible rules ruff cannot check."""
     source = path.read_text(encoding="utf-8", errors="ignore")
@@ -70,6 +98,7 @@ def find_violations(path: Path) -> list[str]:
     except SyntaxError:
         return []
     comment_lines = comment_only_lines(source)
+    pickled_names = pickled_function_names(tree)
     findings = []
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -80,7 +109,8 @@ def find_violations(path: Path) -> list[str]:
                     f"(max {MAX_FUNCTION_BODY_LINES}); extract helpers"
                 )
         for name in defined_names(node):
-            if is_single_underscore(name):
+            is_pickled_function = isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and name in pickled_names
+            if is_single_underscore(name) and not is_pickled_function:
                 findings.append(
                     f"{path}:{getattr(node, 'lineno', 1)}: PYL002 `{name}` starts with a single underscore; "
                     "drop the prefix or use `__name` for truly private members"

@@ -32,7 +32,7 @@ skill is the house style for everyday Python; the deep catalog is in `reference.
 
 | Rule | Do this |
 |---|---|
-| Names | Descriptive; never single-letter, never leading single underscore. `__name` only for truly private members. |
+| Names | Descriptive; never single-letter, never leading single underscore. `__name` only for truly private members. One exception: a function pickled by reference (a `multiprocessing` target) takes a single underscore — see python-concurrency. |
 | Functions | ≤40 body lines; extract well-named helpers past that. |
 | Definition order | Define a function or method above the code that calls it — callees first, callers below. |
 | Line length | ≤120 characters. Don't wrap or split a statement that fits within 120; keep intentional vertical layout (trailing-comma argument lists, one step per line in chains). When it doesn't fit, wrap with parens, not `\`, and extract a variable before splitting an expression mid-call. |

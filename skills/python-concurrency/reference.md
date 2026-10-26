@@ -64,6 +64,39 @@ if __name__ == "__main__":          # required: the default start method re-impo
     render_all(load_pages())
 ```
 
+### Naming a process entry point
+
+The target is pickled as `module` + `__qualname__` and looked up with `getattr` in the child.
+A double-underscore name defeats that lookup:
+
+```python
+class Application:
+    """Starts the service processes."""
+
+    def start(self) -> None:
+        """Start the API server in a child process."""
+        context = multiprocessing.get_context("spawn")
+        context.Process(target=Application._run_api_server, args=(self.settings,)).start()
+
+    @staticmethod
+    def _run_api_server(settings: Settings) -> None:
+        """Child-process entry point: build the pool and serve."""
+        ...
+```
+
+`Application.__run_api_server` is stored as `_Application__run_api_server`, so the pickled
+reference `Application.__run_api_server` does not resolve and `spawn` raises `PicklingError`
+(`fork` never pickles the target, which hides the bug). A single underscore is not mangled, so
+it resolves — and it still says "internal, do not call". This is the one exception to the
+no-single-underscore rule; it covers `target=` and the callable given to an executor's
+`submit`/`map`, nothing else, and `check_conventions.py` skips exactly those names. A
+module-level function works the same way, as `_run_api_server`.
+
+Keep the entry point thin: build heavy resources (pools, clients) inside the child from plain
+picklable arguments such as a settings dataclass, never `self`. If the worker has several steps
+of its own, a small worker class with a public `run` and `__private` helpers keeps them hidden
+without ever pickling a mangled name.
+
 Start methods: `spawn` (Windows/macOS default) and `forkserver` (Linux default from 3.14)
 re-import your module in each worker, so **any import-time side effect runs again per
 worker**. Keep top-level code to definitions; put actions under `if __name__ == "__main__":`.
