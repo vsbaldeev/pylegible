@@ -9,7 +9,8 @@ conflict, choose clarity.
 
 - Optimize for the reader, not the writer. Prefer obvious code over compact code.
 - Prefer explicit over implicit. No hidden side effects, no magic.
-- A well-named function or variable removes the need for a comment.
+- A well-named function or variable removes the need for a comment. Write a comment only
+  for the *why* the code cannot show; delete commented-out code (see `python-comments`).
 
 ## Naming
 
@@ -50,8 +51,9 @@ conflict, choose clarity.
 
 ## Docstrings and types
 
-- Every top-level function and every class method gets a Google-style docstring (exclude
-  nested functions, test functions, and lambdas).
+- Every module, every class (dataclasses and Protocols included), every top-level function,
+  and every class method gets a Google-style docstring (exclude nested functions and
+  classes, test code, lambdas, and package `__init__.py` files).
   *Why:* a documented interface can be used without reading its body; Google style is compact
   and widely tooled (Sphinx/Napoleon) — see the Google Python Style Guide.
 - Annotate signatures. Prefer built-in generics (`list[str]`, `dict[str, int]`).
@@ -87,7 +89,7 @@ Principle of least surprise.
 
 ## Skills
 
-This project ships ten topic skills, each a `SKILL.md` (lean, loaded on demand) plus a
+This project ships eleven topic skills, each a `SKILL.md` (lean, loaded on demand) plus a
 `reference.md` (depth). Scopes are non-overlapping — each `SKILL.md` ends with a **Boundary**
 line pointing at the right skill for adjacent topics.
 
@@ -98,6 +100,7 @@ line pointing at the right skill for adjacent topics.
 | `python-project-structure` | deciding where code lives — splitting modules, naming subpackages, layering, import direction, mirroring `tests/` |
 | `python-testing` | writing pytest tests or doing outside-in TDD — fixtures, parametrization, mocking, fault injection, reading coverage |
 | `python-editing-existing-code` | changing code you didn't write — minimal-footprint edits, characterization tests before touching untested behavior |
+| `python-comments` | writing, reviewing, or deleting `#` comments — why-not-what, TODOs, `noqa`/`type: ignore`, commented-out code |
 | `python-logging` | adding logging, choosing a level, stdout vs stderr, replacing `print` |
 | `python-oop` | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
 | `python-data-model` | dunder methods, operators, custom sequences/iterators, `with`, pattern matching |

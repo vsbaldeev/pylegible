@@ -76,7 +76,7 @@ packages live, what a package exports, and which way imports flow →
 patterns and how several objects collaborate → **python-design-patterns**. Class/dataclass/
 protocol design → **python-oop**. Dunder methods and custom iterators → **python-data-model**.
 Decorators, descriptors, and metaclasses → **python-metaprogramming**. Tests →
-**python-testing**. Logging → **python-logging**. Threads/asyncio/processes → **python-concurrency**.
+**python-testing**. Logging → **python-logging**. Inline `#` comments → **python-comments**. Threads/asyncio/processes → **python-concurrency**.
 See `reference.md` for the full catalog (typing, context managers, generators, imports,
 anti-patterns) and the
 design principles that live here: fail fast, separation of concerns, KISS/YAGNI/least

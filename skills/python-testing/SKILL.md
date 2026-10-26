@@ -99,7 +99,7 @@ def test_save_reports_disk_full_and_leaves_index_empty(tmp_path):
 This skill owns test code and pytest — how a test is written. Where test files *live*, and
 how `tests/` mirrors the source tree → **python-project-structure**. The style of the code
 *under test* → **python-idioms**;
-class design → **python-oop**; logging assertions aside, logging design → **python-logging**.
+class design → **python-oop**; logging assertions aside, logging design → **python-logging**. Comment style, including in test code → **python-comments**.
 Writing concurrent code → **python-concurrency**; forcing a specific interleaving in a test
 is this skill's, in `reference.md`. Deciding *when* to pin existing behavior before changing
 it, and how far a change may spread → **python-editing-existing-code**; this skill owns *how*

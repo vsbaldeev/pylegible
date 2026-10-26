@@ -80,6 +80,6 @@ def charge_order(order: Order, payments: PaymentClient) -> str:
 
 This skill owns logging: levels, what/where to log, configuration — including routing logs
 out of threads and worker processes with `QueueHandler`/`QueueListener`. How to *catch and
-raise* exceptions → **python-idioms**. Choosing and running the pool those workers live in
+raise* exceptions → **python-idioms**. Code comments, as opposed to log messages → **python-comments**. Choosing and running the pool those workers live in
 (threads vs asyncio vs processes) → **python-concurrency**. See `reference.md` for handlers,
 formatters, structured logging, logging from multiple processes, and application setup.

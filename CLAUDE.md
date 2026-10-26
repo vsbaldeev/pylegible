@@ -8,7 +8,8 @@ cleverness conflict, choose clarity.
 
 - Optimize for the reader, not the writer. Prefer obvious code over compact code.
 - Prefer explicit over implicit. No hidden side effects, no magic.
-- A well-named function or variable removes the need for a comment.
+- A well-named function or variable removes the need for a comment. Write a comment only
+  for the *why* the code cannot show; delete commented-out code (see `python-comments`).
 
 ## Design principles
 
@@ -81,8 +82,9 @@ tradition. We adopt them; we don't claim them.
 
 ## Docstrings and types
 
-- Every top-level function and every class method gets a Google-style docstring
-  (exclude nested functions, test functions, and lambdas).
+- Every module, every class (dataclasses and Protocols included), every top-level function,
+  and every class method gets a Google-style docstring (exclude nested functions and
+  classes, test code, lambdas, and package `__init__.py` files).
   *Why:* a documented interface can be used without reading its body; Google style is
   compact and widely tooled (Sphinx/Napoleon) — see the Google Python Style Guide.
 - Annotate function signatures. Prefer built-in generics (`list[str]`, `dict[str, int]`).

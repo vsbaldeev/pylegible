@@ -22,7 +22,7 @@ contributions should match both its conventions and its structure.
 - No single-letter names (the one exception the examples take, as `AGENTS.md` records: `x`/`y`
   for vector/coordinate components); no leading single underscore (`__name` only for truly
   private members).
-- Function bodies ≤ 40 lines; Google-style docstrings on top-level functions and methods;
+- Function bodies ≤ 40 lines; Google-style docstrings on modules, classes (dataclasses too), top-level functions, and methods;
   annotate signatures with built-in generics (`list[str]`).
 - Catch specific exceptions and chain with `raise ... from error`; use `logging`, never `print`.
 

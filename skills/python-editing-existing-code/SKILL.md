@@ -88,7 +88,7 @@ This skill owns *how to change code that already exists* — restraint in scope,
 the edit. How to write the pinning test itself — fixtures, mocks, `pytest.raises`, `approx`
 → **python-testing**. Whether a file should be split or a module moved, and where tests live
 → **python-project-structure** (but never as a drive-by). Statement-level style of the code
-you rewrite → **python-idioms**; redesigning a class you're extending → **python-oop**. See
+you rewrite → **python-idioms**; whether a stale or misleading comment is worth rewriting while you pass → **python-comments**; redesigning a class you're extending → **python-oop**. See
 `reference.md` for the seam catalogue, characterization- and approval-test recipes,
 sprout/wrap for untestable code, strangler-fig for larger replacements, and how to record a
 violation you're leaving alone. Full principle set: SOLID, composition over inheritance,

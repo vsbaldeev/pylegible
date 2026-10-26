@@ -10,7 +10,7 @@ Its overriding value: **code that is easy for a human to read, not merely correc
 
 ## What's inside
 
-- **Ten topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
+- **Eleven topic skills** — each a lean `SKILL.md` (loads when it triggers) plus a
   `reference.md` with the depth (loads only when needed). Scopes are non-overlapping: each
   `SKILL.md` ends with a **Boundary** line pointing at the right skill for adjacent topics.
 - **Always-on conventions and design principles** — [`CLAUDE.md`](CLAUDE.md) (Claude Code)
@@ -26,6 +26,7 @@ Its overriding value: **code that is easy for a human to read, not merely correc
 | **python-project-structure** | deciding where code lives — splitting modules, naming subpackages, layering, import direction, mirroring `tests/` |
 | **python-testing** | writing pytest tests or doing outside-in TDD — fixtures, parametrization, mocking, fault injection, reading coverage |
 | **python-editing-existing-code** | changing code you didn't write — minimal-footprint edits and characterization tests before touching untested behavior |
+| **python-comments** | writing, reviewing, or deleting `#` comments — why-not-what, TODOs, `noqa`/`type: ignore`, commented-out code |
 | **python-logging** | adding logging, choosing a level, deciding stdout vs stderr, or replacing `print` |
 | **python-oop** | designing classes — dataclasses, Protocol/ABC, composition over inheritance, SOLID |
 | **python-data-model** | dunder methods, operators, custom sequences/iterators, `with`, pattern matching |
@@ -41,7 +42,7 @@ pylegible/
 ├── CLAUDE.md                                          always-on rules (Claude Code)
 ├── AGENTS.md                                          always-on rules (Codex) — mirrors CLAUDE.md
 ├── hooks/{hooks.json, lint_python.py, check_conventions.py, check_ruff.py, ruff.toml}   lint after Python edits
-└── skills/<name>/{SKILL.md, reference.md}             the ten skills
+└── skills/<name>/{SKILL.md, reference.md}             the eleven skills
 ```
 
 ## Lint hook (Claude Code and Codex)
@@ -70,7 +71,7 @@ From inside Claude Code, add the marketplace and install the plugin:
 /plugin install pylegible@pylegible
 ```
 
-The ten skills then appear in the skill listing and auto-trigger by description. Manage or
+The eleven skills then appear in the skill listing and auto-trigger by description. Manage or
 update the plugin later with `/plugin`.
 
 <details>
@@ -114,7 +115,7 @@ codex plugin marketplace add vsbaldeev/pylegible
 codex plugin add pylegible@pylegible
 ```
 
-You get the ten skills (invoked by description, or explicitly as `$python-logging`) and the same
+You get the eleven skills (invoked by description, or explicitly as `$python-logging`) and the same
 lint hooks as Claude Code. Codex does not trust plugin hooks automatically: open `/hooks` in the
 CLI and approve them, and expect to re-approve after an update (`codex plugin marketplace upgrade`).
 Codex reads `AGENTS.md` from the project you work in, not from the plugin, so the always-on rules
